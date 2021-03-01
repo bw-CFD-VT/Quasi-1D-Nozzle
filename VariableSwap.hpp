@@ -15,10 +15,5 @@ void primative_to_conserved (int counter, vector<vector<vector<double>>> V, vect
 void conserved_to_primative (int counter, vector<vector<vector<double>>> U, vector<vector<vector<double>>> &V);
 //-----------------------------------------------------------------------------------------------------------------------//
 
-// //---------------------------------------- U -> F (Central Quadrature)---------------------------------------------------//
-// void conserved_to_flux (vector<vector<vector<double>>> U, vector<vector<vector<double>>> &F);
-// //-----------------------------------------------------------------------------------------------------------------------//
-
-
 
 #endif
