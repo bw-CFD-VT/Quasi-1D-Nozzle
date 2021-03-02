@@ -9,16 +9,16 @@ using namespace std;
 
 
 //---------------------------------------- Initial Conditions -----------------------------------------------------------//
-void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<double> x_interface,
+void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, 
                          vector<vector<vector<double>>> &V_cell_center, vector<vector<double>> &M_cell_center);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 
 //---------------------------------------- Boundary Conditions ----------------------------------------------------------//
-void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<double> x_cell_center, 
-                         vector<double> x_interface,vector<vector<vector<double>>> V_cell_center,
-                         vector<vector<double>> M_cell_center,vector<vector<vector<double>>> &V_interface,
-                         vector<vector<double>> &M_interface);
+void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vector<vector<double>>> V_cell_center,
+                         vector<vector<double>> M_cell_center,vector<vector<vector<double>>> &V_Boundary,
+                         vector<vector<double>> &M_Boundary,vector<vector<double>> &V_ghost_inflow,
+                         vector<vector<double>> &V_ghost_outflow);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 

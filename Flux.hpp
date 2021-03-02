@@ -8,8 +8,9 @@
 using namespace std;
 
 
-//---------------------------------------- Initial Conditions -----------------------------------------------------------//
-void Flux (int counter,int NI, vector<vector<vector<double>>> V_cell_center, vector<vector<vector<double>>> &V_interface);
+//---------------------------------------- Flux Vector, F @ iteration = counter -----------------------------------------//
+void Flux (int counter,int NI, vector<vector<vector<double>>> V_Boundary, vector<vector<vector<double>>> U_cell_center,
+           vector<vector<vector<double>>> &F);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 

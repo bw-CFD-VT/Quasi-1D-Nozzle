@@ -14,15 +14,15 @@ double rho, u, p, T;
 
 */
 
-void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<double> x_interface,
-                         vector<vector<vector<double>>> &V_cell_center, vector<vector<double>> &M_cell_center)
+void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<vector<vector<double>>> &V_cell_center, 
+                        vector<vector<double>> &M_cell_center)
 {
 
     M_cell_center.resize(1);
-    M_cell_center[0].resize(imax,{0});
+    M_cell_center[0].resize(imax,0);
 
     V_cell_center.resize(1);
-    V_cell_center[0].resize(imax,{0});
+    V_cell_center[0].resize(imax);
     
 
 
@@ -55,17 +55,20 @@ void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<do
 
 */
 
-void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<double> x_cell_center, 
-                         vector<double> x_interface,vector<vector<vector<double>>> V_cell_center,
-                         vector<vector<double>> M_cell_center,vector<vector<vector<double>>> &V_interface,
-                         vector<vector<double>> &M_interface)
+void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vector<vector<double>>> V_cell_center,
+                         vector<vector<double>> M_cell_center,vector<vector<vector<double>>> &V_Boundary,
+                         vector<vector<double>> &M_Boundary,vector<vector<double>> &V_ghost_inflow,
+                         vector<vector<double>> &V_ghost_outflow)
  {
 
-    M_interface.resize(counter+1);
-    M_interface[counter].resize(NI,{0});
+    M_Boundary.resize(counter+1);
+    M_Boundary[counter].resize(2,0);
 
-    V_interface.resize(counter+1);
-    V_interface[counter].resize(NI,{0,3});
+    V_Boundary.resize(counter+1);
+    V_Boundary[counter].resize(2);
+    V_Boundary[counter][0].resize(3,0); //Inflow Boundary 
+    V_Boundary[counter][1].resize(3,0); //Outflow Boundary
+
 
      //--------INFLOW-------//
 
@@ -74,30 +77,39 @@ void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<doub
 
      if (M_ghost_inflow<0)
      {
-         M_ghost_inflow = 0.01;
+         M_ghost_inflow = 0.1;
      }
 
-     M_interface[counter][0] = 0.5*(M_ghost_inflow+M_cell_center[counter][0]);
-     Isentropic_Relationships(M_interface[0][0],rho, u, p, T);
-     V_interface[counter][0] = {rho, u, p};
+     M_Boundary[counter][0] = 0.5*(M_ghost_inflow+M_cell_center[counter][0]);
+     Isentropic_Relationships(M_Boundary[0][0],rho, u, p, T);
+     V_Boundary[counter][0] = {rho, u, p};
      
-    //  cout<<M_interface[0][0]<<endl;
-    //   cout<<V_interface[0][0][0]<<", "<<V_interface[0][0][1]<<", "<<V_interface[0][0][2]<<endl;
+
+     V_ghost_inflow.resize(counter+1);
+     V_ghost_inflow[counter].resize(3,0);
+     Isentropic_Relationships(M_ghost_inflow,rho, u, p, T);
+     V_ghost_inflow[counter] = {rho, u, p};
+
+        // cout<<V_ghost_inflow[counter][0]<<", "<<V_ghost_inflow[counter][1]<<", "<<V_ghost_inflow[counter][2]<<endl;
+
+    // cout<<M_Boundary[0][0]<<endl;
+    //  cout<<V_Boundary[0][0][0]<<", "<<V_Boundary[0][0][1]<<", "<<V_Boundary[0][0][2]<<endl;
           
 
      //--------OUTFLOW -> SUPERSONIC-------//
      
-     vector<double> V_ghost_outflow;
-     V_ghost_outflow.resize(V_interface[counter][0].size());
+   
+     V_ghost_outflow.resize(counter+1);
+     V_ghost_outflow[counter].resize(V_Boundary[counter][0].size());
 
      for (int i = 0; i<3; i++)
      {
-        V_ghost_outflow[i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
-        V_interface[counter][NI-1][i] = 0.5*(V_ghost_outflow[i]+V_cell_center[counter][imax-1][i]);
+        V_ghost_outflow[counter][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
+        V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][i]+V_cell_center[counter][imax-1][i]);
      }
 
-    //   cout<<V_interface[0][NI-1][0]<<", "<<V_interface[0][NI-1][1]<<", "<<V_interface[0][NI-1][2]<<endl;
-
+    //    cout<<V_Boundary[0][1][0]<<", "<<V_Boundary[0][1][1]<<", "<<V_Boundary[0][1][2]<<endl;
+    //  cout<<V_ghost_outflow[counter][0]<<", "<<V_ghost_outflow[counter][1]<<", "<<V_ghost_outflow[counter][2]<<endl;
 
 
 

@@ -4,22 +4,26 @@
 
 using namespace std;
 
-void Time_Step (int counter, double CFL, double dx, vector<vector<vector<double>>> V_cell_center, vector<vector<double>> &dt)
+void Time_Step (int counter, int imax, double CFL, double dx, vector<vector<vector<double>>> V_cell_center,
+                vector<vector<double>> &lambda_max, vector<vector<double>> &a,vector<vector<double>> &dt)
 {
 
-    double a = 0; //sound speed
-    double lambda_max = 0; //max eigenvalue |u| + a
+    a.resize(counter+1);
+    a[counter].resize(imax,0);
+
+    lambda_max.resize(counter+1);
+    lambda_max[counter].resize(imax,0);
 
     dt.resize(counter+1);
-    dt[counter].resize(V_cell_center[counter].size());
+    dt[counter].resize(imax,0);
 
-    for (int i = 0; i<V_cell_center[counter].size(); i++)
+    for (int i = 0; i<imax; i++)
     {
-        Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a);
+        Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a[counter][i]);
         // cout<<V_cell_center[counter][i][0]<<", "<< V_cell_center[counter][i][2]<<", "<<a<<endl;
-        lambda_max = abs(V_cell_center[counter][i][1])+ a;
+        lambda_max[counter][i] = abs(V_cell_center[counter][i][1])+ a[counter][i];
         // cout<<lambda_max<<", "<<counter<<endl;
-        dt[counter][i] = CFL*dx/lambda_max;
+        dt[counter][i] = CFL*dx/lambda_max[counter][i];
         // cout<<dt[counter][i]<<endl;
 
        
