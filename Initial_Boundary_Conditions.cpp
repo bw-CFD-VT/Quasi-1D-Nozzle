@@ -14,8 +14,8 @@ double rho, u, p, T;
 
 */
 
-void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<vector<vector<double>>> &V_cell_center, 
-                        vector<vector<double>> &M_cell_center)
+void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<vector<vector<double> > > &V_cell_center, 
+                        vector<vector<double> > &M_cell_center)
 {
 
     M_cell_center.resize(1);
@@ -55,60 +55,91 @@ void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<ve
 
 */
 
-void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vector<vector<double>>> V_cell_center,
-                         vector<vector<double>> M_cell_center,vector<vector<vector<double>>> &V_Boundary,
-                         vector<vector<double>> &M_Boundary,vector<vector<double>> &V_ghost_inflow,
-                         vector<vector<double>> &V_ghost_outflow)
+void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vector<vector<double> > > V_cell_center,
+                         vector<vector<double> > M_cell_center,vector<vector<vector<double> > > &V_Boundary,
+                         vector<vector<double> > &M_Boundary,vector<vector<vector<double> > > &V_ghost_inflow,
+                         vector<vector<vector<double> > > &V_ghost_outflow)
  {
-
+     
     M_Boundary.resize(counter+1);
     M_Boundary[counter].resize(2,0);
-
+    
     V_Boundary.resize(counter+1);
     V_Boundary[counter].resize(2);
     V_Boundary[counter][0].resize(3,0); //Inflow Boundary 
     V_Boundary[counter][1].resize(3,0); //Outflow Boundary
 
-
      //--------INFLOW-------//
 
-     double M_ghost_inflow = 2*M_cell_center[counter][0]-M_cell_center[counter][1];
-    //  cout<<M_ghost_inflow<<endl;
+     vector<double> M_ghost_inflow(ghost_cell,0); 
 
-     if (M_ghost_inflow<0)
+
+     M_ghost_inflow[0] = 2*M_cell_center[counter][0]-M_cell_center[counter][1]; //First ghost cell on LHS (next to inlet)
+     M_ghost_inflow[1] = 2*M_ghost_inflow[0]-M_cell_center[counter][0];         //Second ghost cell on LHS
+// cout<< M_ghost_inflow[0]<<endl;
+     if (ghost_cell==2)
      {
-         M_ghost_inflow = 0.1;
+        if (M_ghost_inflow[0]<0)
+        {
+            M_ghost_inflow[1] = 0.05;
+            if (M_ghost_inflow[0]<0)
+            {
+                M_ghost_inflow[0] = M_ghost_inflow[1] + 0.05;
+            }
+        }
+         
      }
 
-     M_Boundary[counter][0] = 0.5*(M_ghost_inflow+M_cell_center[counter][0]);
-     Isentropic_Relationships(M_Boundary[0][0],rho, u, p, T);
+     if (M_ghost_inflow[0]<0)
+     {
+         M_ghost_inflow[0] = 0.1;
+     }
+
+     M_Boundary[counter][0] = 0.5*(M_ghost_inflow[0]+M_cell_center[counter][0]);
+     Isentropic_Relationships(M_Boundary[counter][0],rho, u, p, T);
      V_Boundary[counter][0] = {rho, u, p};
      
 
      V_ghost_inflow.resize(counter+1);
-     V_ghost_inflow[counter].resize(3,0);
-     Isentropic_Relationships(M_ghost_inflow,rho, u, p, T);
-     V_ghost_inflow[counter] = {rho, u, p};
+     V_ghost_inflow[counter].resize(ghost_cell);
+     for (int i = 0; i<ghost_cell; i++)
+     {
+        V_ghost_inflow[counter][i].resize(3,0);
+        Isentropic_Relationships(M_ghost_inflow[i],rho, u, p, T);
+        V_ghost_inflow[counter][i] = {rho, u, p};
+        // cout<<M_ghost_inflow[i]<<endl;
+        //  cout<<V_ghost_inflow[counter][i][0]<<", "<<V_ghost_inflow[counter][i][1]<<", "<<V_ghost_inflow[counter][i][2]<<endl;
+     }
 
-        // cout<<V_ghost_inflow[counter][0]<<", "<<V_ghost_inflow[counter][1]<<", "<<V_ghost_inflow[counter][2]<<endl;
-
-    // cout<<M_Boundary[0][0]<<endl;
-    //  cout<<V_Boundary[0][0][0]<<", "<<V_Boundary[0][0][1]<<", "<<V_Boundary[0][0][2]<<endl;
+    //  cout<<M_Boundary[counter][0]<<endl;
+    //  cout<<V_Boundary[counter][0][0]<<", "<<V_Boundary[counter][0][1]<<", "<<V_Boundary[counter][0][2]<<endl;
           
 
      //--------OUTFLOW -> SUPERSONIC-------//
      
    
      V_ghost_outflow.resize(counter+1);
-     V_ghost_outflow[counter].resize(V_Boundary[counter][0].size());
+     V_ghost_outflow[counter].resize(ghost_cell);
+     V_ghost_outflow[counter][0].resize(3,0);
+     if (ghost_cell==2)
+     {
+        V_ghost_outflow[counter][1].resize(3,0);
+     }
+     
 
      for (int i = 0; i<3; i++)
-     {
-        V_ghost_outflow[counter][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
-        V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][i]+V_cell_center[counter][imax-1][i]);
+     { 
+        V_ghost_outflow[counter][0][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
+        if(ghost_cell==2)
+        {
+            V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
+        }
+    
+        V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][0][i]+V_cell_center[counter][imax-1][i]);
      }
+  
 
-    //    cout<<V_Boundary[0][1][0]<<", "<<V_Boundary[0][1][1]<<", "<<V_Boundary[0][1][2]<<endl;
+    //  cout<<V_Boundary[counter][1][0]<<", "<<V_Boundary[counter][1][1]<<", "<<V_Boundary[counter][1][2]<<endl;
     //  cout<<V_ghost_outflow[counter][0]<<", "<<V_ghost_outflow[counter][1]<<", "<<V_ghost_outflow[counter][2]<<endl;
 
 

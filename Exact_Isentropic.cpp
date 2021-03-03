@@ -1,9 +1,9 @@
 #include "Exact_Isentropic.hpp"
 #include "Constants.hpp"
-
+#include "iomanip"
 using namespace std;
 
-void Isentropic_Nozzle_Exact (int imax, vector<double> x, vector<double> Nozzle_Area)
+void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozzle_Area)
  {
      double es = 1e-10; 
      double M_initial=0,A_bar=0,M_final=0; //Initialize variables required for Newton's method 
@@ -30,6 +30,7 @@ void Isentropic_Nozzle_Exact (int imax, vector<double> x, vector<double> Nozzle_
              M[i] = M_final;
             //   cout<<M[i]<<"\t"<<A_bar<<"\t"<<x[i]<<endl;
          }
+        //  cout<<x[i]<<", "<<fixed<<setprecision(14)<<M[i]<<endl;
 
      }
 
@@ -60,8 +61,8 @@ void Mach(double M_initial, double A_bar, double es, double &M)
            phi_k = 0,       //Intermediate definition for area-mach # relation, reference lecture set 2 (exact solutions)
            F_k = 0,         //F(M) at iteration k
            F_prime_k = 0,   //partial F(m)/partial x at iteration k
-           ea = 0,          //computed "error" at iteration k
-           M_final = 0;     //Final value of Mach # determined from method
+           ea = 0;          //computed "error" at iteration k
+
 
     M_k = M_initial;    //Initialize Mach # at iteration k to be initial guess pending where in nozzle (supersonic vs. subsonic)
                         //Initial guess is passed from isentropic_nozzle function
@@ -88,6 +89,7 @@ void Mach(double M_initial, double A_bar, double es, double &M)
 
 
         ea = abs((M_kp1-M_k)/M_kp1); //compute current iterations error
+        // cout<<F_k<<endl;
         i++;                         //loop counter
 
             if (i>1e5)  //Failsafe incase there was a reason it would get stuck iterating
@@ -96,7 +98,7 @@ void Mach(double M_initial, double A_bar, double es, double &M)
             break;
             }
 
-    }while(es<ea); //Once meets set convergence criteria quit loop
+    }while(ea>es); //Once meets set convergence criteria quit loop
 
     M = M_kp1;
 

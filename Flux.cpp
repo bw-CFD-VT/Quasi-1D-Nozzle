@@ -4,11 +4,11 @@
 
 using namespace std;
 
-void Flux (int counter,int NI, vector<vector<vector<double>>> V_Boundary,
-           vector<vector<vector<double>>> U_cell_center, vector<vector<vector<double>>> &F)
+void Flux (int counter,int NI, vector<vector<vector<double> > > V_Boundary,
+           vector<vector<vector<double> > > U_cell_center, vector<vector<vector<double> > > &F)
 {
-    vector<vector<vector<double>>> U_interface;
-    vector<vector<vector<double>>> U_boundary;
+    vector<vector<vector<double> > > U_interface;
+    vector<vector<vector<double> > > U_boundary;
 
     U_interface.resize(counter+1);
     U_interface[counter].resize(NI);

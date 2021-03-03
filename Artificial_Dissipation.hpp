@@ -9,10 +9,11 @@ using namespace std;
 
 
 //------------------------- Artificial Dissipation Vector, d @ iteration = counter ---------------------------------------//
-void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int NI, vector<vector<double>> lambda_max, 
-                            vector<vector<vector<double>>> V_cell_center, vector<vector<vector<double>>> U_cell_center,
-                            vector<vector<double>> V_ghost_inflow, vector<vector<double>> V_ghost_outflow,
-                            vector<vector<vector<double>>> &d);
+void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int NI, int ghost_cell, vector<vector<double> > lambda_max, 
+                            vector<vector<vector<double> > > V_cell_center, vector<vector<vector<double> > > U_cell_center,
+                            vector<vector<vector<double> > > V_ghost_inflow, vector<vector<vector<double> > >U_ghost_inflow,
+                            vector<vector<vector<double> > > V_ghost_outflow, vector<vector<vector<double> > >U_ghost_outflow,
+                            vector<vector<vector<double> > > &d);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 

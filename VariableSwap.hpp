@@ -8,11 +8,11 @@
 using namespace std;
 
 //---------------------------------------- V -> U -----------------------------------------------------------------------//
-void primative_to_conserved (int counter, vector<vector<vector<double>>> V, vector<vector<vector<double>>> &U);
+void primative_to_conserved (int counter, vector<vector<vector<double> > > V, vector<vector<vector<double> > > &U);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------- U -> V -----------------------------------------------------------------------//
-void conserved_to_primative (int counter, vector<vector<vector<double>>> U, vector<vector<vector<double>>> &V);
+void conserved_to_primative (int counter, vector<vector<vector<double> > > U, vector<vector<vector<double> > > &V);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 

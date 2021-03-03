@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void Isentropic_Nozzle_Exact (int imax, vector<double> x, vector<double> Nozzle_Area);
+void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozzle_Area);
 
 void Mach(double M_initial, double A_bar, double es, double &M);
 
