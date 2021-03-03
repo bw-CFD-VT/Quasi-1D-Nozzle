@@ -21,7 +21,7 @@ void Geometry_Indexing(double imax, double NI, double& dx, vector<double>& x_int
     }
         // cout<<"\n";
 
-    for (double i = 0; i<imax; i++)
+    for (int i = 0; i<imax; i++)
     {
         x_cell_center[i] = x_interface[i] + half_dx;
         // cout<<x_cell_center[i]<<", ";

@@ -9,6 +9,7 @@
 #include "Artificial_Dissipation.hpp"
 #include "Exact_Isentropic.hpp"
 #include "Source_Term.hpp"
+#include "Norm.hpp"
 
 using namespace std;
 
@@ -66,8 +67,10 @@ int main()
     vector<vector<double> > lambda_max; //Matrix of local max eigenvalue |u| + a, [row = time][column = i]
     vector<vector<vector<double> > > Residual; //Steady-State residual vector, [row = time][column = i]
     vector<vector<vector<double> > > SourceTerm; //Matrix of Source Term, S = [S1,S2,S3] [row = time][column = i]
+    vector<vector<double> > L2;
 
-    double CFL = 0.5;
+
+    double CFL = 0.1;
     double K_2 = 1/2;
     double K_4 = 1/32;
     
@@ -95,17 +98,20 @@ int main()
         for (int j = 0; j<3; j++)
         {
 
-            Residual[counter][i][j] = F[counter][i+1][j]*0.01*Area_interface[i+1]-F[counter][i][j]*0.2*Area_interface[i]-SourceTerm[counter][i][j]*dx;
+            Residual[counter][i][j] = F[counter][i+1][j]*Area_interface[i+1]-F[counter][i][j]*Area_interface[i]-SourceTerm[counter][i][j]*dx;
             U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - (dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
-            // cout<<U_cell_center[counter+1][i][j]<<endl;
+            cout<<Residual[counter][i][j]<<endl;
         
         }
 
     }
+    cout<<"Calculating Norms"<<endl;
+    Norm(counter,imax,Residual,L2);
+
     counter++;
 
     conserved_to_primative(counter,U_cell_center,V_cell_center);
-    
+
     M_cell_center.resize(counter+1);
     M_cell_center[counter].resize(imax,0);
     a.resize(counter+1);
@@ -115,7 +121,7 @@ int main()
     {
         Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a[counter][i]);
         M_cell_center[counter][i] = V_cell_center[counter][i][1]/a[counter][i];
-         cout<<M_cell_center[counter][i]<<endl;
+        //  cout<<M_cell_center[counter][i]<<endl;
 
     }
     
@@ -124,11 +130,7 @@ int main()
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
 
      cout<<"Counter: "<<counter<<endl;
-    } while (counter < 5);
+    } while (counter < 1);
     cout<<"Broke Loop"<<endl;
-
-    //Resiudal Calc
-
-
 
 };
