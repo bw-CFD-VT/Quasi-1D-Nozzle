@@ -6,11 +6,13 @@ Eliminates need for explicit testing framework i.e. cppunit
 
 Strictly requires header function -> #include "acutest.hpp"
 
-Unit Tested Functions
+"Unit Tested" Functions
     -Geometry -> Interface + Cell Center Location | Area at each corresponding x location
     -Sound Speed
     -Time Step
     -Variable Swap -> Primative to Conserved | Conserved to Primative
+    -Norms
+    -Flux
     
 
 */
@@ -78,11 +80,8 @@ void Test_Geometry(void)
         TEST_ASSERT(Area_interface_error[i]<error_tol);
     }
 
-
-
-
-
 }
+
 void Test_Sound_Speed(void)
 {
     double a;
@@ -95,7 +94,6 @@ void Test_Sound_Speed(void)
     TEST_ASSERT(a_error<error_tol);
 
 }
-
 
 void Test_Time_Step(void)
 {
@@ -185,8 +183,39 @@ void Test_Variable_Swap(void)
     //--------------------------------------------------------//
    
 }
-void Test_Norms(void)
+
+void Test_L2_Norm(void)
 {
+    int counter = 0;
+    int imax = 5;
+    vector<vector<double> > L2;
+
+    vector<vector<vector<double> > > Residual;
+    Residual.resize(counter+1);
+    Residual[counter].resize(imax);
+
+    for (double i = 0; i<imax; i++)
+    {
+        Residual[counter][i].resize(3);
+        for (double j=0; j<3; j++)
+        {
+            Residual[counter][i][j] = j+1+i;
+        }
+    }
+
+
+    L2_Norm(counter,imax,Residual,L2);
+
+    vector<double> L2_expected(3,0),L2_error(3,0);
+    L2_expected[0] = 3.31662479035540;
+    L2_expected[1] = 4.24264068711928;
+    L2_expected[2] = 5.19615242270663;
+
+    for (int i = 0;i<3;i++)
+    {
+        L2_error[i] = abs(L2_expected[i]-L2[counter][i]);
+        TEST_ASSERT(L2_error[i]<error_tol);
+    }
 
 }
 
@@ -200,7 +229,7 @@ TEST_LIST = {
     {"Time Step",Test_Time_Step},
     {"Sound Speed",Test_Sound_Speed},
     {"Variable Swap",Test_Variable_Swap},
-    {"Norms",Test_Norms},
+    {"L2 Norm",Test_Norm},
     {"Flux",Test_Flux},
     {0}
     };

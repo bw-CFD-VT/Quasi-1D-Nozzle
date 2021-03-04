@@ -105,7 +105,7 @@ int main()
 
     }
     cout<<"Calculating Norms"<<endl;
-    Norm(counter,imax,Residual,L2);
+    L2_Norm(counter,imax,Residual,L2);
 
     counter++;
 

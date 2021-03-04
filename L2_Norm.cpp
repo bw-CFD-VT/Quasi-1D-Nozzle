@@ -1,8 +1,8 @@
-#include "Norm.hpp"
+#include "L2_Norm.hpp"
 
 using namespace std;
 
-void Norm(int counter,double imax,vector<vector<vector<double> > > Residual, vector<vector<double> > &L2)
+void L2_Norm(int counter,double imax,vector<vector<vector<double> > > Residual, vector<vector<double> > &L2)
 {
 
     L2.resize(counter+1);
@@ -18,18 +18,6 @@ void Norm(int counter,double imax,vector<vector<vector<double> > > Residual, vec
         }
         L2[counter][j] = sqrt(sum/imax);
     }
-    
-
-
-
-
-
-
-
-
-
-
-
 
     return;
 
