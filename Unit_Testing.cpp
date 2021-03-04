@@ -221,6 +221,10 @@ void Test_L2_Norm(void)
 
 void Test_Flux(void)
 {
+    int counter = 0;
+    int NI = 
+    Flux(counter, NI, V_Boundary, U_cell_center, F)
+
 
 }
 

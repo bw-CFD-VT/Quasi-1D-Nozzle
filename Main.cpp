@@ -18,7 +18,7 @@ using namespace std;
 int main()
 {
    
-    int imax = 6;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
+    int imax = 20;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
     int NI = imax +1;        //Max # of Interfaces
     int t=0;                 // Initialize pseudo-time iteration counter/index
     double dx;
@@ -70,8 +70,8 @@ int main()
     vector<vector<double> > L2;
 
 
-    double CFL = 0.1;
-    double K_2 = 1/2;
+    double CFL = 0.2;
+    double K_2 = 1/4;
     double K_4 = 1/32;
     
       
@@ -98,14 +98,15 @@ int main()
         for (int j = 0; j<3; j++)
         {
 
-            Residual[counter][i][j] = F[counter][i+1][j]*Area_interface[i+1]-F[counter][i][j]*Area_interface[i]-SourceTerm[counter][i][j]*dx;
+            Residual[counter][i][j] = (F[counter][i+1][j]-5)*Area_interface[i+1]-(F[counter][i][j]-5)*Area_interface[i]-SourceTerm[counter][i][j]*dx;
             U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - (dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
-        
+            cout<<U_cell_center[counter][i][j]<<endl;
         }
 
     }
     cout<<"Calculating Norms"<<endl;
     L2_Norm(counter,imax,Residual,L2);
+
 
     counter++;
 
@@ -127,7 +128,7 @@ int main()
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
 
      cout<<"Counter: "<<counter<<endl;
-    } while (counter < 100);
+    } while (counter < 10);
     cout<<"Broke Loop"<<endl;
 
 };
