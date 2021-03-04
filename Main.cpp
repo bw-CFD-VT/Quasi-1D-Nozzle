@@ -120,8 +120,6 @@ int main()
     {
         Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a[counter][i]);
         M_cell_center[counter][i] = V_cell_center[counter][i][1]/a[counter][i];
-        //  cout<<M_cell_center[counter][i]<<endl;
-
     }
     
     Boundary_Conditions(counter,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
@@ -129,7 +127,7 @@ int main()
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
 
      cout<<"Counter: "<<counter<<endl;
-    } while (counter < 1);
+    } while (counter < 100);
     cout<<"Broke Loop"<<endl;
 
 };

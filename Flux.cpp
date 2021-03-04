@@ -26,7 +26,6 @@ void Flux (int counter,int NI, vector<vector<vector<double> > > V_Boundary,
          {
             U_interface[counter][i][j] = 0.5*(U_cell_center[counter][i][j]+U_cell_center[counter][i-1][j]);
          }
-            //   cout<<i<<", "<<U_interface[counter][i][0]<<", "<<U_interface[counter][i][1]<<", "<<U_interface[counter][i][2]<<endl;
      }
 
 
@@ -39,13 +38,7 @@ void Flux (int counter,int NI, vector<vector<vector<double> > > V_Boundary,
             F[counter][j][0] = U_interface[counter][j][1];
             F[counter][j][1] = ((3-gam)/2)*(U_interface[counter][j][1]*U_interface[counter][j][1]/U_interface[counter][j][1])+(gam-1)*U_interface[counter][j][2];
             F[counter][j][2] = U_interface[counter][j][2]*(U_interface[counter][j][1]/U_interface[counter][j][0])+(U_interface[counter][j][1]/U_interface[counter][j][0])*((gam-1)*U_interface[counter][j][2]-(((gam-1)/2)*(U_interface[counter][j][1]*U_interface[counter][j][1]/U_interface[counter][j][0])));
-        
-            // cout<<j<<", "<<F[counter][j][0]<<", "<<F[counter][j][1]<<", "<<F[counter][j][2]<<endl;
-    
         }
-
-
-
 
     return;
 }

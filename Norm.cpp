@@ -14,14 +14,9 @@ void Norm(int counter,double imax,vector<vector<vector<double> > > Residual, vec
         double sum = 0;
         for (int i = 0; i<imax; i++)
         {
-
            sum += Residual[counter][i][j]*Residual[counter][i][j];
-
         }
-
         L2[counter][j] = sqrt(sum/imax);
-        cout<<L2[counter][j]<<endl;
-      
     }
     
 

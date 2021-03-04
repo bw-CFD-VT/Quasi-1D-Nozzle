@@ -6,14 +6,14 @@ Eliminates need for explicit testing framework i.e. cppunit
 
 Strictly requires header function -> #include "acutest.hpp"
 
-Tested Functions
+Unit Tested Functions
+    -Geometry -> Interface + Cell Center Location | Area at each corresponding x location
     -Sound Speed
     -Time Step
     -Variable Swap -> Primative to Conserved | Conserved to Primative
     
 
 */
-
 
 #include "acutest.hpp"
 #include "Constants.hpp"
@@ -25,8 +25,64 @@ Tested Functions
 #include "Norm.hpp"
 #include <iomanip>
 
- double error_tol = 1e-14;
+double error_tol = 1e-14;
 
+void Test_Geometry(void)
+{
+    int imax = 4;
+    int NI = imax+1;
+    double dx;
+
+    vector<double> x_interface, x_cell_center,Area_interface,Area_cell_center;
+
+    Geometry_Indexing(imax,NI,dx,x_interface,x_cell_center);
+    Area(x_interface,Area_interface);
+    Area(x_cell_center,Area_cell_center);
+
+    double dx_expected = 0.5000000;
+
+    vector<double> x_cell_center_expected(imax,0),Area_cell_center_expected(imax,0),x_cell_center_error(imax,0),Area_cell_center_error(imax,0);
+    x_cell_center_expected[0] = -0.75000;
+    x_cell_center_expected[1] = -0.25000;
+    x_cell_center_expected[2] = 0.25000;
+    x_cell_center_expected[3] = 0.75000;
+    Area_cell_center_expected[0] = 0.882842712474619;
+    Area_cell_center_expected[1] = 0.317157287525381;
+    Area_cell_center_expected[2] = 0.317157287525381;
+    Area_cell_center_expected[3] = 0.882842712474619;
+
+    vector<double> x_interface_expected(NI,0),Area_interface_expected(NI,0),x_interface_error(NI,0),Area_interface_error(NI,0);
+    x_interface_expected[0] = -1.00000;
+    x_interface_expected[1] = -0.50000;
+    x_interface_expected[2] = 0.00000;
+    x_interface_expected[3] = 0.50000;
+    x_interface_expected[4] = 1.00000;
+    Area_interface_expected[0] = 1.0000;
+    Area_interface_expected[1] = 0.6000;
+    Area_interface_expected[2] = 0.2000;
+    Area_interface_expected[3] = 0.6000;
+    Area_interface_expected[4] = 1.0000;
+    
+    for (int i = 0; i<imax; i++)
+    {
+        x_cell_center_error[i] = abs(x_cell_center[i]-x_cell_center_expected[i]);
+        Area_cell_center_error[i] = abs(Area_cell_center[i]-Area_cell_center_expected[i]);
+        TEST_ASSERT(x_cell_center_error[i]<error_tol);
+        TEST_ASSERT(Area_cell_center_error[i]<error_tol);
+    }
+    for (int i = 0; i<NI; i++)
+    {
+        x_interface_error[i] = abs(x_interface[i]-x_interface_expected[i]);
+        Area_interface_error[i] = abs(Area_interface[i]-Area_interface_expected[i]);
+        TEST_ASSERT(x_interface_error[i]<error_tol);
+        TEST_ASSERT(Area_interface_error[i]<error_tol);
+    }
+
+
+
+
+
+}
 void Test_Sound_Speed(void)
 {
     double a;
@@ -100,7 +156,6 @@ void Test_Variable_Swap(void)
         for (double j=0; j<3; j++)
         {
             V[counter][i][j] = j+1.775;
-            cout<<V[counter][i][j]<<endl;
         }
 
     }
@@ -132,6 +187,7 @@ void Test_Variable_Swap(void)
 }
 
 TEST_LIST = { 
+    {"Geometry",Test_Geometry},
     {"Time Step",Test_Time_Step},
     {"Sound Speed",Test_Sound_Speed},
     {"Variable Swap",Test_Variable_Swap},

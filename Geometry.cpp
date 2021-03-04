@@ -17,16 +17,13 @@ void Geometry_Indexing(double imax, double NI, double& dx, vector<double>& x_int
     for (double i = 0; i<NI; i++)
     {
         x_interface[i] = imin + i * dx;
-        // cout<<x_interface[i]<<", ";
     }
-        // cout<<"\n";
+
 
     for (int i = 0; i<imax; i++)
     {
         x_cell_center[i] = x_interface[i] + half_dx;
-        // cout<<x_cell_center[i]<<", ";
     }
-        // cout<<"\n";
 
     return;
 }
@@ -36,12 +33,12 @@ void Geometry_Indexing(double imax, double NI, double& dx, vector<double>& x_int
  void Area(vector<double> x, vector<double>& Area_x)
  {
      Area_x.resize(x.size());
+
      for (int i = 0; i<x.size(); i++)
      {
          Area_x[i]=0.2+0.4*(1+sin(M_PI*(x[i]-0.5))); 
-        //  cout<<Area_x[i]<<", ";
      }
-        // cout<<"\n";
+
     return;
  }
 //-----------------------------------------------------------------------------------------------------------------------//
