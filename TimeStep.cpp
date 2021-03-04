@@ -20,13 +20,8 @@ void Time_Step (int counter, int imax, double CFL, double dx, vector<vector<vect
     for (int i = 0; i<imax; i++)
     {
         Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a[counter][i]);
-        // cout<<V_cell_center[counter][i][0]<<", "<< V_cell_center[counter][i][2]<<", "<<a<<endl;
         lambda_max[counter][i] = abs(V_cell_center[counter][i][1])+ a[counter][i];
-        // cout<<lambda_max<<", "<<counter<<endl;
         dt[counter][i] = CFL*dx/lambda_max[counter][i];
-        // cout<<dt[counter][i]<<endl;
-
-       
        
     }
 

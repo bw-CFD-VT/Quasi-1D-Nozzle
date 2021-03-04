@@ -100,7 +100,6 @@ int main()
 
             Residual[counter][i][j] = F[counter][i+1][j]*Area_interface[i+1]-F[counter][i][j]*Area_interface[i]-SourceTerm[counter][i][j]*dx;
             U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - (dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
-            cout<<Residual[counter][i][j]<<endl;
         
         }
 

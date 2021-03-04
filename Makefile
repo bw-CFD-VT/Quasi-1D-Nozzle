@@ -4,6 +4,9 @@ CFLAGS = -std=c++17 -Wall
 main: Main.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o Norm.o
 	$(CC) $(CFLAGS) -o Main Main.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o Norm.o
 
+Unit_Testing: Unit_Testing.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o Norm.o
+	$(CC) $(CFLAGS) -o Unit_Testing Unit_Testing.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o Norm.o
+
 Geometry.o:	Geometry.hpp Geometry.cpp
 	$(CC) $(CFLAGS) -c Geometry.cpp
  
@@ -35,6 +38,6 @@ Norm.o: Norm.hpp Norm.cpp
 	$(CC) $(CFLAGS) -c Norm.cpp
 
 clean:
-	rm -f core *.o Main
+	rm -f core *.o Main Unit_Testing 
  
 

@@ -14,7 +14,7 @@ void primative_to_conserved (int counter, vector<vector<vector<double> > > V, ve
             U[counter][j].resize(V[counter][j].size(),0);
             U[counter][j][0] = V[counter][j][0];
             U[counter][j][1] = V[counter][j][0]*V[counter][j][1];
-            U[counter][j][2] = V[counter][j][1]*(V[counter][j][2]/(gam-1)+(V[counter][j][0]*(V[counter][j][1]*V[counter][j][1])/2));
+            U[counter][j][2] = (V[counter][j][2]/(gam-1))+(V[counter][j][0]*((V[counter][j][1]*V[counter][j][1])/2));
     
         }
 
@@ -33,7 +33,7 @@ void conserved_to_primative (int counter,vector<vector<vector<double> > > U, vec
             V[counter][j].resize(U[counter][j].size(),0);
             V[counter][j][0] = U[counter][j][0];
             V[counter][j][1] = U[counter][j][1]/U[counter][j][0];
-            V[counter][j][2] = (gam-1)*((U[counter][j][2]*U[counter][j][0])/2 - (U[counter][j][0]*U[counter][j][1]*U[counter][j][1]/(U[counter][j][0]*U[counter][j][0])/2));
+            V[counter][j][2] = (gam-1)*(U[counter][j][2] - U[counter][j][0]*(((U[counter][j][1]*U[counter][j][1])/(U[counter][j][0]*U[counter][j][0]))/2));
             
         }
 

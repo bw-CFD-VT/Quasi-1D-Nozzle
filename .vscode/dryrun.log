@@ -1,0 +1,5 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/bwalsh4/Documents/Grad School/AOE 6145/Quasi-1D-Nozzle'
+make: `main' is up to date.
+make: Leaving directory `/Users/bwalsh4/Documents/Grad School/AOE 6145/Quasi-1D-Nozzle'
+ 
