@@ -24,7 +24,7 @@ Strictly requires header function -> #include "acutest.hpp"
 #include "SoundSpeed.hpp"
 #include "VariableSwap.hpp"
 #include "Flux.hpp"
-#include "Norm.hpp"
+#include "L2_Norm.hpp"
 #include <iomanip>
 
 double error_tol = 1e-14;
@@ -229,7 +229,7 @@ TEST_LIST = {
     {"Time Step",Test_Time_Step},
     {"Sound Speed",Test_Sound_Speed},
     {"Variable Swap",Test_Variable_Swap},
-    {"L2 Norm",Test_Norm},
+    {"L2 Norm",Test_L2_Norm},
     {"Flux",Test_Flux},
     {0}
     };
