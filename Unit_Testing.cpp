@@ -185,11 +185,22 @@ void Test_Variable_Swap(void)
     //--------------------------------------------------------//
    
 }
+void Test_Norms(void)
+{
+
+}
+
+void Test_Flux(void)
+{
+
+}
 
 TEST_LIST = { 
     {"Geometry",Test_Geometry},
     {"Time Step",Test_Time_Step},
     {"Sound Speed",Test_Sound_Speed},
     {"Variable Swap",Test_Variable_Swap},
+    {"Norms",Test_Norms},
+    {"Flux",Test_Flux},
     {0}
     };
