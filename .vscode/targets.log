@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
  
 
-# Make data base, printed on Wed Mar  3 16:28:37 2021
+# Make data base, printed on Wed Mar  3 23:12:06 2021
 
 # Variables
 
@@ -65,6 +65,7 @@ PWD = /Users/bwalsh4/Documents/Grad School/AOE 6145/Quasi-1D-Nozzle
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
+ 
 VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
 # environment
 HOME = /Users/bwalsh4
@@ -143,9 +144,9 @@ VSCODE_PID = 60274
 
 # Directories
 
-# . (device 16777222, inode 8624281870): 48 files, no impossibilities.
+# . (device 16777222, inode 8624281870): 33 files, no impossibilities.
 
-# 48 files, no impossibilities in 1 directories.
+# 33 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -175,6 +176,7 @@ Source_Term.cpp:
 
 # Not a target:
 SoundSpeed.hpp:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -188,18 +190,12 @@ all:
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
-# Not a target:
-Norm.cpp:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
 Unit_Testing: Unit_Testing.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o Norm.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 8):
-	$(CC) $(CFLAGS) -o Unit_Testing Unit_Testing.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o Norm.o
+	$(CC) $(CFLAGS) -o Unit_Testing Unit_Testing.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o
 	
 
 # Not a target:
@@ -216,12 +212,6 @@ Exact_Isentropic.cpp:
 
 # Not a target:
 Source_Term.hpp:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-# Not a target:
-Norm.hpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -243,7 +233,7 @@ Artifical_Dissipation.o: Artificial_Dissipation.hpp Artificial_Dissipation.cpp
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-03-03 16:28:02
+#  Last modified 2021-03-03 23:12:02
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -290,6 +280,12 @@ SoundSpeed.o: SoundSpeed.hpp SoundSpeed.cpp
 	
 
 # Not a target:
+L2_Norm.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 Flux.hpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -309,20 +305,24 @@ Artificial_Dissipation.hpp:
 
 Source_Term.o: Source_Term.hpp Source_Term.cpp
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 35):
 	$(CC) $(CFLAGS) -c Source_Term.cpp
 	
 
-Norm.o: Norm.hpp Norm.cpp
+# Not a target:
+Norm.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 38):
-	$(CC) $(CFLAGS) -c Norm.cpp
-	
+ 
+
+# Not a target:
+L2_Norm.hpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -411,7 +411,15 @@ main: Main.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSp
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 5):
-	$(CC) $(CFLAGS) -o Main Main.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o Norm.o
+	$(CC) $(CFLAGS) -o Main Main.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o
+	
+
+L2_Norm.o: L2_Norm.hpp L2_Norm.cpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 38):
+	$(CC) $(CFLAGS) -c L2_Norm.cpp
 	
 
 # Not a target:
@@ -427,7 +435,7 @@ SoundSpeed.cpp:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=40/1024=4%, Rehash=0, Collisions=4/94=4%
+# Load=41/1024=4%, Rehash=0, Collisions=4/95=4%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -439,6 +447,6 @@ SoundSpeed.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Wed Mar  3 16:28:37 2021
+# Finished Make data base on Wed Mar  3 23:12:06 2021
 
  

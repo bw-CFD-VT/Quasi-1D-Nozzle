@@ -9,7 +9,7 @@
 #include "Artificial_Dissipation.hpp"
 #include "Exact_Isentropic.hpp"
 #include "Source_Term.hpp"
-#include "Norm.hpp"
+#include "L2_Norm.hpp"
 
 using namespace std;
 
