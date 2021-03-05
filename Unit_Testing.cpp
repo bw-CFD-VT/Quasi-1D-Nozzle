@@ -222,8 +222,64 @@ void Test_L2_Norm(void)
 void Test_Flux(void)
 {
     int counter = 0;
-    int NI = 
-    Flux(counter, NI, V_Boundary, U_cell_center, F)
+    int NI = 4;
+    vector<vector<vector<double> > > F;
+
+    vector<vector<vector<double> > > V;
+    V.resize(counter+1);
+    V[counter].resize(2);
+
+    for (double i = 0; i<2; i++)
+    {
+        V[counter][i].resize(3);
+        for (double j=0; j<3; j++)
+        {
+            V[counter][i][j] = j+1+i;
+        }
+    }
+
+    vector<vector<vector<double> > > U;
+    U.resize(counter+1);
+    U[counter].resize(NI-1);
+
+    for (double i = 0; i<NI-1; i++)
+    {
+        U[counter][i].resize(3);
+        for (double j=0; j<3; j++)
+        {
+            U[counter][i][j] = j+1+i;
+        }
+    }
+
+    Flux(counter,NI,V,U,F);
+
+    vector<vector<double> > F_expected(NI,vector<double>(3,0));
+    vector<vector<double> > F_error(NI,vector<double>(3,0));
+    F_expected[0][0] = 2.000000000000000;
+    F_expected[0][1] = 7.000000000000000;
+    F_expected[0][2] = 25.000000000000000;
+    F_expected[1][0] = 2.500000000000000;
+    F_expected[1][1] = 4.733333333333330;
+    F_expected[1][2] = 6.777777777777780;
+    F_expected[2][0] = 3.500000000000000;
+    F_expected[2][1] = 5.720000000000000;
+    F_expected[2][2] = 7.448000000000000;
+    F_expected[3][0] = 6.000000000000000;
+    F_expected[3][1] = 22.000000000000000;
+    F_expected[3][2] = 69.000000000000000;
+
+    for (int i = 0; i<NI; i++)
+    {
+        F_error[i].resize(3,0);
+
+        for (int j = 0; j<3; j++)
+        {
+            F_error[i][j] = abs(F_expected[i][j] - F[counter][i][j]);
+            TEST_ASSERT(F_error[i][j]<error_tol);
+        }
+    }
+
+
 
 
 }

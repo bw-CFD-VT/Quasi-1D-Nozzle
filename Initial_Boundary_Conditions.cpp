@@ -14,7 +14,7 @@ double rho, u, p, T;
 
 */
 
-void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<vector<vector<double> > > &V_cell_center, 
+void Initial_Conditions (int imax,int NI, vector<double> x_cell_center, vector<vector<vector<double> > > &V_cell_center, 
                         vector<vector<double> > &M_cell_center)
 {
 
@@ -55,7 +55,7 @@ void Initial_Conditions (int imax,int NI,vector<double> x_cell_center, vector<ve
 
 */
 
-void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vector<vector<double> > > V_cell_center,
+void Boundary_Conditions(int counter,int Case_Flag,int ghost_cell,int imax,int NI,vector<vector<vector<double> > > V_cell_center,
                          vector<vector<double> > M_cell_center,vector<vector<vector<double> > > &V_Boundary,
                          vector<vector<double> > &M_Boundary,vector<vector<vector<double> > > &V_ghost_inflow,
                          vector<vector<vector<double> > > &V_ghost_outflow)
@@ -69,23 +69,21 @@ void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vect
     V_Boundary[counter][0].resize(3,0); //Inflow Boundary 
     V_Boundary[counter][1].resize(3,0); //Outflow Boundary
 
-     //--------INFLOW-------//
+     
 
+     //---------------------------------------- INFLOW BC ------------------------------------------------------------// 
      vector<double> M_ghost_inflow(ghost_cell,0); 
-
-
      M_ghost_inflow[0] = 2*M_cell_center[counter][0]-M_cell_center[counter][1]; //First ghost cell on LHS (next to inlet)
-     M_ghost_inflow[1] = 2*M_ghost_inflow[0]-M_cell_center[counter][0];         //Second ghost cell on LHS
-// cout<< M_ghost_inflow[0]<<endl;
+     
+
      if (ghost_cell==2)
      {
+        M_ghost_inflow[1] = 2*M_ghost_inflow[0]-M_cell_center[counter][0]; //Second ghost cell on LHS
+
         if (M_ghost_inflow[0]<0)
         {
             M_ghost_inflow[1] = 0.05;
-            if (M_ghost_inflow[0]<0)
-            {
-                M_ghost_inflow[0] = M_ghost_inflow[1] + 0.05;
-            }
+            M_ghost_inflow[0] = M_ghost_inflow[1] + 0.05;
         }
          
      }
@@ -113,10 +111,9 @@ void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vect
 
     //  cout<<M_Boundary[counter][0]<<endl;
     //  cout<<V_Boundary[counter][0][0]<<", "<<V_Boundary[counter][0][1]<<", "<<V_Boundary[counter][0][2]<<endl;
-          
+    //---------------------------------------------------------------------------------------------------------------//      
 
-     //--------OUTFLOW -> SUPERSONIC-------//
-     
+    //---------------------------------------- OUTFLOW BC -----------------------------------------------------------// 
    
      V_ghost_outflow.resize(counter+1);
      V_ghost_outflow[counter].resize(ghost_cell);
@@ -127,28 +124,63 @@ void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vect
      }
      
 
-     for (int i = 0; i<3; i++)
-     { 
-        V_ghost_outflow[counter][0][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
-        if(ghost_cell==2)
-        {
-            V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
-        }
+    //---------------------------------------- Supersonic Outflow BC -----------------------------------------------// 
+     if (Case_Flag == 1) //Supersonic Outflow
+     {
+        for (int i = 0; i<3; i++)
+        { 
+            V_ghost_outflow[counter][0][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
+
+            if(ghost_cell==2)
+            {
+                V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
+            }
     
-        V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][0][i]+V_cell_center[counter][imax-1][i]);
+            V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][0][i]+V_cell_center[counter][imax-1][i]);
+        }
      }
-  
 
-    //  cout<<V_Boundary[counter][1][0]<<", "<<V_Boundary[counter][1][1]<<", "<<V_Boundary[counter][1][2]<<endl;
-    //  cout<<V_ghost_outflow[counter][0]<<", "<<V_ghost_outflow[counter][1]<<", "<<V_ghost_outflow[counter][2]<<endl;
+    //------------------------------------------- Subsonic Outflow BC -----------------------------------------------// 
+    if (Case_Flag == 2) //Subsonic Outflow
+     {
+         double p_back = 120e3;
+         
+        for (int i = 0; i<3; i++)
+        { 
+            if (i==2)
+            {
+                V_Boundary[counter][1][i] = p_back;
+                V_ghost_outflow[counter][0][i]=(2*p_back)-V_cell_center[counter][imax-1][i];
+
+                if(ghost_cell==2)
+                {
+                    V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
+                }
+            }
+
+            else
+            {
+                V_ghost_outflow[counter][0][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
+
+                if(ghost_cell==2)
+                {
+                    V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
+                }
+
+                V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][0][i]+V_cell_center[counter][imax-1][i]);
+            }
+            
+        }
+     }
 
 
 
-      //--------OUTFLOW -> SUBSONIC---------//
-
+    //---------------------------------------------------------------------------------------------------------------// 
 
     return;
  }
+
+
 
 void Isentropic_Relationships (double Mach, double &rho, double &u, double &p, double &T)
 {

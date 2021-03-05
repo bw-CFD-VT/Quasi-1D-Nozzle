@@ -18,9 +18,16 @@ using namespace std;
 int main()
 {
    
-    int imax = 20;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
+
+
+
+
+
+
+
+    int imax = 30;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
     int NI = imax +1;        //Max # of Interfaces
-    int t=0;                 // Initialize pseudo-time iteration counter/index
+    int Case_Flag = 1;
     double dx;
 
 
@@ -51,7 +58,7 @@ int main()
     Initial_Conditions(imax,NI,x_cell_center,V_cell_center,M_cell_center);
     primative_to_conserved(counter,V_cell_center,U_cell_center);
     
-    Boundary_Conditions(counter,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
+    Boundary_Conditions(counter,Case_Flag,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
     primative_to_conserved(counter,V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow);
 
@@ -123,12 +130,12 @@ int main()
         M_cell_center[counter][i] = V_cell_center[counter][i][1]/a[counter][i];
     }
     
-    Boundary_Conditions(counter,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
+    Boundary_Conditions(counter,Case_Flag,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
     primative_to_conserved(counter,V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
 
      cout<<"Counter: "<<counter<<endl;
-    } while (counter < 10);
+    } while (counter < 20);
     cout<<"Broke Loop"<<endl;
 
 };

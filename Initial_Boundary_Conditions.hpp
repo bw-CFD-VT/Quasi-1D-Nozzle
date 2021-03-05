@@ -15,7 +15,7 @@ void Initial_Conditions (int imax,int NI,vector<double> x_cell_center,
 
 
 //---------------------------------------- Boundary Conditions ----------------------------------------------------------//
-void Boundary_Conditions(int counter, int ghost_cell,int imax,int NI,vector<vector<vector<double> > > V_cell_center,
+void Boundary_Conditions(int counter,int Case_Flag,int ghost_cell,int imax,int NI,vector<vector<vector<double> > > V_cell_center,
                          vector<vector<double> > M_cell_center,vector<vector<vector<double> > > &V_Boundary,
                          vector<vector<double> > &M_Boundary,vector<vector<vector<double> > > &V_ghost_inflow,
                          vector<vector<vector<double> > > &V_ghost_outflow);

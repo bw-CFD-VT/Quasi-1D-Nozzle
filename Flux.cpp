@@ -31,12 +31,12 @@ void Flux (int counter,int NI, vector<vector<vector<double> > > V_Boundary,
 
         F.resize(counter+1);
 
-        F[counter].resize(U_interface[counter].size());
-        for (int j=0; j<F[counter].size(); j++)
+        F[counter].resize(NI);
+        for (int j=0; j<NI; j++)
         {
             F[counter][j].resize(3,0);
             F[counter][j][0] = U_interface[counter][j][1];
-            F[counter][j][1] = ((3-gam)/2)*(U_interface[counter][j][1]*U_interface[counter][j][1]/U_interface[counter][j][1])+(gam-1)*U_interface[counter][j][2];
+            F[counter][j][1] = ((3-gam)/2)*(U_interface[counter][j][1]*U_interface[counter][j][1]/U_interface[counter][j][0])+(gam-1)*U_interface[counter][j][2];
             F[counter][j][2] = U_interface[counter][j][2]*(U_interface[counter][j][1]/U_interface[counter][j][0])+(U_interface[counter][j][1]/U_interface[counter][j][0])*((gam-1)*U_interface[counter][j][2]-(((gam-1)/2)*(U_interface[counter][j][1]*U_interface[counter][j][1]/U_interface[counter][j][0])));
         }
 
