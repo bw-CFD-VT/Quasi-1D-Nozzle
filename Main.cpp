@@ -18,14 +18,13 @@ string filename = "Results.txt";
 
 int main()
 {
-    int Case;
-    int Case_Flag;
-    cout<<"\n"<<"Choose Case"<<"\n"<<"(1): Supersonic (Isentropic)"<<"\n"
-           <<"(2): Subsonic (Shock in Nozzle)"<<"\n"<<endl;
-    cin>>Case_Flag;
+    int Case_Flag=1;
+    // cout<<"\n"<<"Choose Case"<<"\n"<<"(1): Supersonic (Isentropic)"<<"\n"
+    //        <<"(2): Subsonic (Shock in Nozzle)"<<"\n"<<endl;
+    // cin>>Case_Flag;
 
 
-    int imax = 30;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
+    int imax = 10;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
     int NI = imax +1;        //Max # of Interfaces
     double dx;
 
@@ -51,7 +50,7 @@ int main()
     vector<vector<vector<double> > > U_ghost_inflow;    // Matrix of Conserved Variable Vectors @ outfow ghost cell(s), U = [U1,U2,U3]
     vector<vector<vector<double> > > U_ghost_outflow;   // Matrix of Conserved Variable Vectors @ outfow ghost cell(s), U = [U1,U2,U3]
 
-    double ghost_cell = 1; // Initialize # of ghost cells to be used (refers to # per boundary, i.e. 1 = 1 @ inflow and 1 @ outflow)
+    double ghost_cell = 2; // Initialize # of ghost cells to be used (refers to # per boundary, i.e. 1 = 1 @ inflow and 1 @ outflow)
     int counter = 0;
     
     Initial_Conditions(imax,NI,x_cell_center,V_cell_center,M_cell_center);
@@ -73,12 +72,15 @@ int main()
     vector<vector<double> > lambda_max; //Matrix of local max eigenvalue |u| + a, [row = time][column = i]
     vector<vector<vector<double> > > Residual; //Steady-State residual vector, [row = time][column = i]
     vector<vector<vector<double> > > SourceTerm; //Matrix of Source Term, S = [S1,S2,S3] [row = time][column = i]
+
+    //------------- Iterative Convergence Variable(s) ---------//
     vector<vector<double> > L2;
+    vector<vector<vector<double> > > DE;
+    vector<double> L2_n (3,0);
 
-
-    double CFL = 0.2;
-    double K_2 = 1/4;
-    double K_4 = 1/32;
+    double CFL = 0.1;
+    double K_2 = 0.3;
+    double K_4 = 0.03125;
     
       
     do
@@ -87,38 +89,48 @@ int main()
     //-------------------------- Main Iteration -------------------------------//    
     Time_Step(counter,imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
     Flux(counter,NI,V_Boundary,U_cell_center,F);
-    // Artifical_Dissipation(K_2,K_4,counter,imax,NI,ghost_cell,lambda_max,V_cell_center,U_cell_center,V_ghost_inflow,U_ghost_inflow,V_ghost_outflow,U_ghost_outflow,d);
+    Artifical_Dissipation(K_2,K_4,counter,imax,NI,ghost_cell,lambda_max,V_cell_center,U_cell_center,V_ghost_inflow,U_ghost_inflow,V_ghost_outflow,U_ghost_outflow,d);
     Source_Term(counter,imax,dx, Area_interface,V_cell_center,SourceTerm);
     
     Residual.resize(counter+1);
-    Residual[counter].resize(imax);
+    Residual[counter].resize(imax,vector<double>(3,0));
     U_cell_center.resize(counter+2);
-    U_cell_center[counter+1].resize(imax);
- 
+    U_cell_center[counter+1].resize(imax,vector<double>(3,0));
+    // double d_t = *std::min_element(dt[counter].begin(),dt[counter].end()); //If global time step -> replace dt below
+
     
     for (int i = 0; i<imax; i++)
     {
-        Residual[counter][i].resize(3,0);
-        U_cell_center[counter+1][i].resize(3,0);
-
         for (int j = 0; j<3; j++)
         {
-
-            Residual[counter][i][j] = (F[counter][i+1][j])*Area_interface[i+1]-(F[counter][i][j])*Area_interface[i]-SourceTerm[counter][i][j]*dx;
-            U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - (dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
+            Residual[counter][i][j] = ((F[counter][i+1][j]+d[counter][i+1][j])*Area_interface[i+1])-((F[counter][i][j]+d[counter][i][j])*Area_interface[i])-(SourceTerm[counter][i][j]*dx);
+            U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - ((dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j]);
         }
-
     }
 
-    
-    cout<<"Calculating Norms"<<endl;
+    // cout<<"Calculating Norms"<<endl;
     L2_Norm(counter,imax,Residual,L2);
-
+    
+    if (counter == 0)
+    {
+        L2_n[0] = L2[counter][0];
+        L2_n[1] = L2[counter][1];
+        L2_n[2] = L2[counter][2];
+    }
+    
+    for (int i = 0; i<3; i++)
+    {
+        // cout<<L2_n[i]<<endl;
+        L2[counter][i] = L2[counter][i]/L2_n[i];
+        // cout<<L2[counter][i]<<endl;
+    }
+    // write_file(filename,counter,imax,L2);
 
     counter++;
+    cout<<"Counter: "<<counter<<endl;
 
     conserved_to_primative(counter,U_cell_center,V_cell_center);
-    write_file(filename,counter,imax,V_cell_center);
+
 
     M_cell_center.resize(counter+1);
     M_cell_center[counter].resize(imax,0);
@@ -129,14 +141,15 @@ int main()
     {
         Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a[counter][i]);
         M_cell_center[counter][i] = V_cell_center[counter][i][1]/a[counter][i];
+        cout<<M_cell_center[counter][i]<<endl;
     }
     
     Boundary_Conditions(counter,Case_Flag,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
     primative_to_conserved(counter,V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
 
-     cout<<"Counter: "<<counter<<endl;
-    } while (counter < 25);
+     
+    } while (counter<20);
     cout<<"Broke Loop"<<endl;
 
 };

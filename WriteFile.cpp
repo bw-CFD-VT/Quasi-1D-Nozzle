@@ -3,21 +3,18 @@
 using namespace std;
 
 
-void write_file(string filename, int counter, int imax, vector<vector<vector<double> > > v)
+void write_file(string filename, int counter, int imax, vector<vector<double> > v)
 {   
     ofstream file(filename,std::ios_base::app);
     if (file.is_open())
     {
-        file<<counter<<"\n";
+        file<<counter<<",";
         //Write Variable Outputs to Corresponding Column/Variable Label
-        for (int i = 0; i<imax; i++)
+        for (int i = 0; i<3; i++)
         {   
-            for (int j = 0; j<3; j++)
-            {
-                file << fixed << setprecision(14) << v[counter][i][j]<<",";
-            }
-            file << "\n";
+            file << fixed << setprecision(14) << v[counter][i]<<",";
         }
+            file << "\n";
             file.close();
     
     }
