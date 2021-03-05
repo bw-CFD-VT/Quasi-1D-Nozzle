@@ -10,10 +10,11 @@
 #include "Exact_Isentropic.hpp"
 #include "Source_Term.hpp"
 #include "L2_Norm.hpp"
+#include "WriteFile.hpp"
 
 using namespace std;
 
-
+string filename = "Results.txt";
 
 int main()
 {
@@ -103,12 +104,13 @@ int main()
         for (int j = 0; j<3; j++)
         {
 
-            Residual[counter][i][j] = (F[counter][i+1][j]-5)*Area_interface[i+1]-(F[counter][i][j]-5)*Area_interface[i]-SourceTerm[counter][i][j]*dx;
+            Residual[counter][i][j] = (F[counter][i+1][j])*Area_interface[i+1]-(F[counter][i][j])*Area_interface[i]-SourceTerm[counter][i][j]*dx;
             U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - (dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
-            cout<<U_cell_center[counter][i][j]<<endl;
         }
 
     }
+
+    
     cout<<"Calculating Norms"<<endl;
     L2_Norm(counter,imax,Residual,L2);
 
@@ -116,6 +118,7 @@ int main()
     counter++;
 
     conserved_to_primative(counter,U_cell_center,V_cell_center);
+    write_file(filename,counter,imax,V_cell_center);
 
     M_cell_center.resize(counter+1);
     M_cell_center[counter].resize(imax,0);
@@ -133,7 +136,7 @@ int main()
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
 
      cout<<"Counter: "<<counter<<endl;
-    } while (counter < 20);
+    } while (counter < 25);
     cout<<"Broke Loop"<<endl;
 
 };
