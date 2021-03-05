@@ -1,5 +1,16 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/bwalsh4/Documents/Grad School/AOE 6145/Quasi-1D-Nozzle'
-make: `main' is up to date.
+c++    -c -o Main.o Main.cpp
+g++ -std=c++17 -Wall -c Geometry.cpp
+g++ -std=c++17 -Wall -c Initial_Boundary_Conditions.cpp 
+g++ -std=c++17 -Wall -c Exact_Isentropic.cpp
+g++ -std=c++17 -Wall -c SoundSpeed.cpp 
+g++ -std=c++17 -Wall -c TimeStep.cpp 
+g++ -std=c++17 -Wall -c VariableSwap.cpp
+g++ -std=c++17 -Wall -c Flux.cpp 
+c++    -c -o Artificial_Dissipation.o Artificial_Dissipation.cpp
+g++ -std=c++17 -Wall -c Source_Term.cpp
+g++ -std=c++17 -Wall -c L2_Norm.cpp
+g++ -std=c++17 -Wall -o Main Main.o Geometry.o Initial_Boundary_Conditions.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o
 make: Leaving directory `/Users/bwalsh4/Documents/Grad School/AOE 6145/Quasi-1D-Nozzle'
  

@@ -17,17 +17,15 @@ using namespace std;
 
 int main()
 {
-   
-
-
-
-
-
+    int Case;
+    int Case_Flag;
+    cout<<"\n"<<"Choose Case"<<"\n"<<"(1): Supersonic (Isentropic)"<<"\n"
+           <<"(2): Subsonic (Shock in Nozzle)"<<"\n"<<endl;
+    cin>>Case_Flag;
 
 
     int imax = 30;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
     int NI = imax +1;        //Max # of Interfaces
-    int Case_Flag = 1;
     double dx;
 
 
