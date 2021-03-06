@@ -1,7 +1,15 @@
-// #include "FileOutput.hpp"
+// AOE 6145
+// Homework 2: Quasi-1D Nozzle FVM Code
+// Brendan Walsh (PID: bwalsh4)
+
+// Central Flux Quadrature
+// JST Artificial Dissipation
+
 #include "Constants.hpp"
 #include "Geometry.hpp"
-#include "Initial_Boundary_Conditions.hpp"
+#include "Initial_Conditions.hpp"
+#include "Boundary_Conditions.hpp"
+#include "Isentropic_Flow.hpp"
 #include "TimeStep.hpp"
 #include "SoundSpeed.hpp"
 #include "VariableSwap.hpp"
@@ -37,7 +45,18 @@ int main()
     Area(x_cell_center,Area_cell_center);
     //-------------------------------------------------------------------------------------------------------------------------//
 
-    Isentropic_Nozzle_Exact(NI,x_interface,Area_interface);
+    //---------------------------------------- Exact Solution (Isentropic) ----------------------------------------------------//
+    vector<double> M_exact(imax,0),rho_exact(imax,0), u_exact(imax,0), p_exact(imax,0), T_exact(imax,0);
+    
+    Isentropic_Nozzle_Exact(imax,x_cell_center,Area_cell_center,M_exact,rho_exact,u_exact,p_exact,T_exact);
+    
+    for (int i = 0; i<imax; i++)
+    {
+        cout<<M_exact[i]<<endl;
+    }
+    //-------------------------------------------------------------------------------------------------------------------------//
+
+    
 
     //----------------------------------------------------Initial Conditions --------------------------------------------------//
     vector<vector<vector<double> > > V_cell_center;     // Matrix of Primative Variable Vectors at cell center, V = [V1,V2,V3]
@@ -59,12 +78,12 @@ int main()
     Boundary_Conditions(counter,Case_Flag,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
     primative_to_conserved(counter,V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow);
-
-
     //-------------------------------------------------------------------------------------------------------------------------//
 
 
-    //---------------------------------------- MAIN LOOP --------------------------------------------------//
+
+    //------------------------------------------------- MAIN LOOP -------------------------------------------------------------//
+  
     vector<vector<vector<double> > > F; // Matrix of Flux Variable Vectors, F = [F1,F2,F3], [row = time][column = i+1/2]
     vector<vector<vector<double> > > d; //Matrix of artificial dissipation vectors, d = [d1,d2,d3], [row = time][column = i+1/2]
     vector<vector<double> > dt; //Matrix of local step time, [row = time][column = i]
@@ -79,14 +98,14 @@ int main()
     vector<double> L2_n (3,0);
 
     double CFL = 0.1;
-    double K_2 = 0.3;
-    double K_4 = 0.03125;
+    double K_2 = 0.25;
+    double K_4 = 0.015625;
     
       
     do
     {
         
-    //-------------------------- Main Iteration -------------------------------//    
+    //---------------------- MAIN ITERATION ---------------------------------------//  
     Time_Step(counter,imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
     Flux(counter,NI,V_Boundary,U_cell_center,F);
     Artifical_Dissipation(K_2,K_4,counter,imax,NI,ghost_cell,lambda_max,V_cell_center,U_cell_center,V_ghost_inflow,U_ghost_inflow,V_ghost_outflow,U_ghost_outflow,d);
@@ -96,17 +115,27 @@ int main()
     Residual[counter].resize(imax,vector<double>(3,0));
     U_cell_center.resize(counter+2);
     U_cell_center[counter+1].resize(imax,vector<double>(3,0));
-    // double d_t = *std::min_element(dt[counter].begin(),dt[counter].end()); //If global time step -> replace dt below
+    double d_t = *std::min_element(dt[counter].begin(),dt[counter].end()); //If global time step -> replace dt below
 
-    
     for (int i = 0; i<imax; i++)
     {
+        
         for (int j = 0; j<3; j++)
         {
-            Residual[counter][i][j] = ((F[counter][i+1][j]+d[counter][i+1][j])*Area_interface[i+1])-((F[counter][i][j]+d[counter][i][j])*Area_interface[i])-(SourceTerm[counter][i][j]*dx);
-            U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - ((dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j]);
+            Residual[counter][i][j] = (F[counter][i+1][j]+d[counter][i+1][j])*Area_interface[i+1]-
+                                      (F[counter][i][j]+d[counter][i][j])*Area_interface[i]-SourceTerm[counter][i][j]*dx;
+
+            U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - (dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
         }
+        //  cout<<Residual[counter][i][0]<<", "<<Residual[counter][i][1]<<", "<<Residual[counter][i][2]<<endl;
+        //  cout<<U_cell_center[counter+1][i][0]<<", "<<U_cell_center[counter+1][i][1]<<", "<<U_cell_center[counter+1][i][2]<<endl;
     }
+    //----------------------------------------------------------------------------//    
+    
+
+    //  if (counter > 2000) CFL = 0.1;
+     if (counter > 2500)  CFL = 0.2;
+     if (counter > 3000) CFL = 0.5;
 
     // cout<<"Calculating Norms"<<endl;
     L2_Norm(counter,imax,Residual,L2);
@@ -124,32 +153,36 @@ int main()
         L2[counter][i] = L2[counter][i]/L2_n[i];
         // cout<<L2[counter][i]<<endl;
     }
-    // write_file(filename,counter,imax,L2);
+    write_file(filename,counter,imax,L2);
 
     counter++;
     cout<<"Counter: "<<counter<<endl;
 
     conserved_to_primative(counter,U_cell_center,V_cell_center);
 
-
+    //---------------------- Update Mach Number ---------------------------------------//
     M_cell_center.resize(counter+1);
     M_cell_center[counter].resize(imax,0);
-    a.resize(counter+1);
-    a[counter].resize(imax,0);
-
+    
     for (int i = 0; i<imax; i++)
     {
-        Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a[counter][i]);
-        M_cell_center[counter][i] = V_cell_center[counter][i][1]/a[counter][i];
-        cout<<M_cell_center[counter][i]<<endl;
+        double a_mach = 0;
+        Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a_mach);
+        M_cell_center[counter][i] = V_cell_center[counter][i][1]/a_mach;
+         cout<<M_cell_center[counter][i]<<endl;
+        // cout<<V_cell_center[counter][i][0]<<"\t"<<V_cell_center[counter][i][1]<<"\t"<<V_cell_center[counter][i][2]<<endl;
     }
-    
+    //---------------------------------------------------------------------------------//
+
+
+    //---------------------- Update Boundary Conditions -------------------------------//
     Boundary_Conditions(counter,Case_Flag,ghost_cell,imax,NI,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
     primative_to_conserved(counter,V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
-
+    //---------------------------------------------------------------------------------//
      
-    } while (counter<20);
+    } while (counter<5000);
+    //-------------------------------------------------------------------------------------------------------------------------//
     cout<<"Broke Loop"<<endl;
 
 };

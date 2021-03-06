@@ -3,11 +3,12 @@
 #include "iomanip"
 using namespace std;
 
-void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozzle_Area)
+void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozzle_Area, 
+                              vector<double> &M_exact, vector<double> &rho_exact, vector<double> &u_exact,
+                              vector<double> &p_exact, vector<double> &T_exact)
  {
      double es = 1e-10; 
      double M_initial=0,A_bar=0,M_final=0; //Initialize variables required for Newton's method 
-     vector<double> M(imax); //Initialize vector for Mach#(x)
      
      double A_star = 0.2; //HARD CODED IN THROAT AREA BASED ON A(0.0)
 
@@ -18,17 +19,15 @@ void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozz
              M_initial = 0.5;
              A_bar = Nozzle_Area[i]/A_star;
              Mach(M_initial,A_bar,es,M_final);
-             M[i] = M_final;
-            //   cout<<M[i]<<"\t"<<Nozzle_Area[i]<<"\t"<<x[i]<<endl;
-
+             M_exact[i] = M_final;
          }
+
          else               //Diverging Section -> Assuming Pb << Pe -> Supersonic
          {
              M_initial = 3;
              A_bar = Nozzle_Area[i]/A_star;
              Mach(M_initial,A_bar,es,M_final);
-             M[i] = M_final;
-            //   cout<<M[i]<<"\t"<<A_bar<<"\t"<<x[i]<<endl;
+             M_exact[i] = M_final;
          }
         //  cout<<x[i]<<", "<<fixed<<setprecision(14)<<M[i]<<endl;
 
@@ -36,15 +35,14 @@ void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozz
 
      //-------------- Isentropic Nozzle Relationships --------------------//
      double psi=0;
-     vector<double> T(imax), p(imax), rho(imax), u(imax);
 
      for (int i = 0;i<imax;i++)
      {
-         psi = 1+((gam-1)/2)*M[i]*M[i];
-         T[i] = T0/psi;                         // Static Temp,    T, Kelvin
-         p[i] = p0/pow(psi,(gam/(gam-1)));      // Static Press,   p, pa
-         rho[i] = p[i]/(R*T[i]);                // Density,      rho, kg/m^3
-         u[i] = abs(M[i]*sqrt(gam*R*T[i]));     // x-velocity,     u, m/s
+         psi = 1+((gam-1)/2)*M_exact[i]*M_exact[i];
+         T_exact[i] = T0/psi;                         // Static Temp,    T, Kelvin
+         p_exact[i] = p0/pow(psi,(gam/(gam-1)));      // Static Press,   p, pa
+         rho_exact[i] = p_exact[i]/(R*T_exact[i]);                // Density,      rho, kg/m^3
+         u_exact[i] = abs(M_exact[i]*sqrt(gam*R*T_exact[i]));     // x-velocity,     u, m/s
      }
 
      return;
