@@ -8,6 +8,7 @@
 
 using namespace std;
 
-void write_file(string filename, int counter, int imax, vector<vector<double> > v);
+void norm_file(string filename, int counter, int imax, vector<vector<double> > v);
+void mach_file(string filename, int counter, int imax, vector<vector<double> > v);
 
 #endif

@@ -26,11 +26,6 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int NI,
     {
         Cell_Pressure[i+ghost_cell] = V_cell_center[counter][i][2];
     }
-
-    // for (int i = 0; i<imax+(2*ghost_cell); i++)
-    // {
-    //     cout<<Cell_Pressure[i]<<endl;
-    // }
     //------------------------------------------------------------------------------------------------------//
 
     //------------------- Setup Vector of Conserved Variables For Artificial Dissipation Calc --------------//
@@ -52,11 +47,6 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int NI,
             U_dissipation[i+ghost_cell][j] = U_cell_center[counter][i][j];
         }
     }
-
-    // for (int i = 0; i<imax+(2*ghost_cell); i++)
-    // {
-    //     cout<<U_dissipation[i][0]<<"\t"<<U_dissipation[i][1]<<"\t"<<U_dissipation[i][2]<<"\t"<<endl;
-    // }
     //------------------------------------------------------------------------------------------------------//
 
 
@@ -73,7 +63,6 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int NI,
     {
       v[i-1] = abs(Cell_Pressure[i+1]-(2*Cell_Pressure[i])+Cell_Pressure[i-1])/
                abs(Cell_Pressure[i+1]+(2*Cell_Pressure[i])+Cell_Pressure[i-1]);
-            // cout<<v[i-1]<<endl;
     }
 
     for (int i = 1; i<imax; i++)
@@ -86,19 +75,16 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int NI,
         // cout<<eps_half_4<<endl; 
         for (int j = 0; j<3; j++)
         {
-            
             d[counter][i][j] = -((lambda_half*eps_half_2*(U_dissipation[i+2][j]-U_dissipation[i+1][j]))-
                                  (lambda_half*eps_half_4*(U_dissipation[i+3][j]-3*U_dissipation[i+2][j]+
                                   3*U_dissipation[i+1][j]-U_dissipation[i][j])));
         }
-        //  cout<<d[counter][i][0]<<"\t"<<d[counter][i][1]<<"\t"<<d[counter][i][2]<<"\t"<<endl;
     }
 
     for (int j = 0; j<3; j++)
     {
         d[counter][0][j] = 2*d[counter][1][j]-d[counter][2][j];
         d[counter][imax][j] = 2*d[counter][imax-1][j]-d[counter][imax-2][j];
-        //  cout<<d[counter][0][j]<<"\t"<<d[counter][imax][j]<<"\t"<<endl;
     }
 
 

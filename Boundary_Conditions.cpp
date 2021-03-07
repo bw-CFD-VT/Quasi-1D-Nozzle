@@ -35,39 +35,37 @@ void Boundary_Conditions(int counter,int Case_Flag,int ghost_cell,int imax,int N
 
      M_ghost_inflow[1] = 2*M_cell_center[counter][0]-M_cell_center[counter][1]; //Second ghost cell on LHS
      M_ghost_inflow[0] = 2*M_ghost_inflow[1]-M_cell_center[counter][0];
-    //  cout<<M_ghost_inflow[0]<<M_ghost_inflow[1]<<endl;
-     if (M_ghost_inflow[1]<0 && M_ghost_inflow[0]<0)
-     {
-        M_ghost_inflow[0] = 0.001;
-        M_ghost_inflow[1] = M_ghost_inflow[0] + 0.01;
-     }
-     if (M_ghost_inflow[0]<0)
-     {
-        M_ghost_inflow[0] = 0.001;
-     }
-     if (M_ghost_inflow[1]<0)
-     {
-        M_ghost_inflow[1] = 0.011;
-     }
-
-     
-         
      M_Boundary[counter][0] = 0.5*(M_ghost_inflow[1]+M_cell_center[counter][0]);
+     if (M_Boundary[counter][0]<0)
+     {
+        M_Boundary[counter][0] = 0.000005;
+     }
+   //   if (M_ghost_inflow[1]<0 && M_ghost_inflow[0]<0)
+   //   {
+   //      M_ghost_inflow[0] = 0.025;
+   //      M_ghost_inflow[1] = M_ghost_inflow[0] + 0.025;
+   //   }
+   //   if (M_ghost_inflow[0]<0)
+   //   {
+   //      M_ghost_inflow[0] = 0.025;
+   //   }
+   //   if (M_ghost_inflow[1]<0)
+   //   {
+   //      M_ghost_inflow[1] = M_ghost_inflow[0]+0.025;
+   //   }
+     
+
      Isentropic_Flow(M_Boundary[counter][0],rho, u, p, T);
      V_Boundary[counter][0] = {rho, u, p};
 
      V_ghost_inflow.resize(counter+1);
      V_ghost_inflow[counter].resize(ghost_cell,vector<double>(3,0));
+
      for (int i = 0; i<ghost_cell; i++)
      {
         Isentropic_Flow(M_ghost_inflow[i],rho, u, p, T);
         V_ghost_inflow[counter][i] = {rho, u, p};
-        // cout<<M_ghost_inflow[i]<<endl;
-        // cout<<V_ghost_inflow[counter][i][0]<<", "<<V_ghost_inflow[counter][i][1]<<", "<<V_ghost_inflow[counter][i][2]<<endl;
      }
-
-    //  cout<<M_Boundary[counter][0]<<endl;
-    //  cout<<V_Boundary[counter][0][0]<<", "<<V_Boundary[counter][0][1]<<", "<<V_Boundary[counter][0][2]<<endl;
     //---------------------------------------------------------------------------------------------------------------//      
 
     //---------------------------------------- OUTFLOW BC -----------------------------------------------------------// 
@@ -87,40 +85,30 @@ void Boundary_Conditions(int counter,int Case_Flag,int ghost_cell,int imax,int N
             // cout<<V_ghost_outflow[counter][1][0]<<", "<<V_ghost_outflow[counter][1][1]<<", "<<V_ghost_outflow[counter][1][2]<<endl;
         }
      }
-        // cout<<V_Boundary[counter][1][0]<<", "<<V_Boundary[counter][1][1]<<", "<<V_Boundary[counter][1][2]<<endl;
 
     //------------------------------------------- Subsonic Outflow BC -----------------------------------------------// 
-    // if (Case_Flag == 2) //Subsonic Outflow
-    //  {
-    //      double p_back = 120e3;
+    if (Case_Flag == 2) //Subsonic Outflow
+     {
+         double p_back = 120e3;
          
-    //     for (int i = 0; i<3; i++)
-    //     { 
-    //         if (i==2)
-    //         {
-    //             V_Boundary[counter][1][i] = p_back;
-    //             V_ghost_outflow[counter][0][i]=(2*p_back)-V_cell_center[counter][imax-1][i];
+        for (int i = 0; i<3; i++)
+        { 
+            if (i==2)
+            {
+                V_Boundary[counter][1][i] = p_back;
+                V_ghost_outflow[counter][0][i]=(2*p_back)-V_cell_center[counter][imax-1][i];
+                V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
+            }
 
-    //             if(ghost_cell==2)
-    //             {
-    //                 V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
-    //             }
-    //         }
-
-    //         else
-    //         {
-    //             V_ghost_outflow[counter][0][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
-
-    //             if(ghost_cell==2)
-    //             {
-    //                 V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
-    //             }
-
-    //             V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][0][i]+V_cell_center[counter][imax-1][i]);
-    //         }
+            else
+            {
+                V_ghost_outflow[counter][0][i]=(2*V_cell_center[counter][imax-1][i])-V_cell_center[counter][imax-2][i];
+                V_ghost_outflow[counter][1][i]=(2*V_ghost_outflow[counter][0][i]-V_cell_center[counter][imax-1][i]);
+                V_Boundary[counter][1][i] = 0.5*(V_ghost_outflow[counter][0][i]+V_cell_center[counter][imax-1][i]);
+            }
             
-    //     }
-    //  }
+        }
+     }
 
 
 

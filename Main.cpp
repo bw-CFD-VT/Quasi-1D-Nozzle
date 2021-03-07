@@ -22,7 +22,8 @@
 
 using namespace std;
 
-string filename = "Results.txt";
+string filename_1 = "Norm_2.txt";
+string filename_2 = "Mach_2.txt";
 
 int main()
 {
@@ -32,7 +33,7 @@ int main()
     // cin>>Case_Flag;
 
 
-    int imax = 10;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
+    int imax = 100;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
     int NI = imax +1;        //Max # of Interfaces
     double dx;
 
@@ -96,15 +97,17 @@ int main()
     vector<vector<double> > L2;
     vector<vector<vector<double> > > DE;
     vector<double> L2_n (3,0);
-
+    double error;
     double CFL = 0.1;
-    double K_2 = 0.25;
+    double K_2 = 2*0.25;
     double K_4 = 0.015625;
     
       
     do
     {
-        
+
+    if (counter%50 == 0) cout<<"Counter: "<<counter<<endl;    
+
     //---------------------- MAIN ITERATION ---------------------------------------//  
     Time_Step(counter,imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
     Flux(counter,NI,V_Boundary,U_cell_center,F);
@@ -115,27 +118,28 @@ int main()
     Residual[counter].resize(imax,vector<double>(3,0));
     U_cell_center.resize(counter+2);
     U_cell_center[counter+1].resize(imax,vector<double>(3,0));
-    double d_t = *std::min_element(dt[counter].begin(),dt[counter].end()); //If global time step -> replace dt below
+    // double d_t = *std::min_element(dt[counter].begin(),dt[counter].end()); //If global time step -> replace dt below
 
     for (int i = 0; i<imax; i++)
     {
         
         for (int j = 0; j<3; j++)
         {
-            Residual[counter][i][j] = (F[counter][i+1][j]+d[counter][i+1][j])*Area_interface[i+1]-
-                                      (F[counter][i][j]+d[counter][i][j])*Area_interface[i]-SourceTerm[counter][i][j]*dx;
+            Residual[counter][i][j] = (F[counter][i+1][j]+d[counter][i+1][j])*Area_interface[i+1]
+                                     -(F[counter][i][j]+d[counter][i][j])*Area_interface[i]
+                                      -SourceTerm[counter][i][j]*dx;
 
-            U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] - (dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
+            U_cell_center[counter+1][i][j] = U_cell_center[counter][i][j] 
+                                            -(dt[counter][i]/(Area_cell_center[i]*dx))*Residual[counter][i][j];
         }
         //  cout<<Residual[counter][i][0]<<", "<<Residual[counter][i][1]<<", "<<Residual[counter][i][2]<<endl;
         //  cout<<U_cell_center[counter+1][i][0]<<", "<<U_cell_center[counter+1][i][1]<<", "<<U_cell_center[counter+1][i][2]<<endl;
     }
     //----------------------------------------------------------------------------//    
     
-
-    //  if (counter > 2000) CFL = 0.1;
-     if (counter > 2500)  CFL = 0.2;
-     if (counter > 3000) CFL = 0.5;
+     if (counter > 3000)  CFL = 0.3;
+    //  if (counter > 3000)  CFL = 0.2;
+    //  if (counter > 4000) CFL = 0.3;
 
     // cout<<"Calculating Norms"<<endl;
     L2_Norm(counter,imax,Residual,L2);
@@ -149,14 +153,14 @@ int main()
     
     for (int i = 0; i<3; i++)
     {
-        // cout<<L2_n[i]<<endl;
         L2[counter][i] = L2[counter][i]/L2_n[i];
-        // cout<<L2[counter][i]<<endl;
+        error = L2[counter][i];
     }
-    write_file(filename,counter,imax,L2);
+
+    norm_file(filename_1,counter,imax,L2);
+    mach_file(filename_2,counter,imax,M_cell_center);
 
     counter++;
-    cout<<"Counter: "<<counter<<endl;
 
     conserved_to_primative(counter,U_cell_center,V_cell_center);
 
@@ -169,7 +173,7 @@ int main()
         double a_mach = 0;
         Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a_mach);
         M_cell_center[counter][i] = V_cell_center[counter][i][1]/a_mach;
-         cout<<M_cell_center[counter][i]<<endl;
+        //  cout<<M_cell_center[counter][i]<<endl;
         // cout<<V_cell_center[counter][i][0]<<"\t"<<V_cell_center[counter][i][1]<<"\t"<<V_cell_center[counter][i][2]<<endl;
     }
     //---------------------------------------------------------------------------------//
@@ -181,7 +185,7 @@ int main()
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
     //---------------------------------------------------------------------------------//
      
-    } while (counter<5000);
+    } while (error>1e-6);
     //-------------------------------------------------------------------------------------------------------------------------//
     cout<<"Broke Loop"<<endl;
 

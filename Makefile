@@ -9,7 +9,7 @@ Unit_Testing: Unit_Testing.o Geometry.o Initial_Conditions.o Boundary_Conditions
 
 Geometry.o:	Geometry.hpp Geometry.cpp
 	$(CC) $(CFLAGS) -c Geometry.cpp
- 
+
 Initial_Conditions.o: Initial_Conditions.hpp Initial_Conditions.cpp
 	$(CC) $(CFLAGS) -c Initial_Conditions.cpp 
 
@@ -36,16 +36,15 @@ Flux.o: Flux.hpp Flux.cpp
 
 Artifical_Dissipation.o: Artificial_Dissipation.hpp Artificial_Dissipation.cpp
 	$(CC) $(CFLAGS) -c Artificial_Dissipation.cpp
-	
+
 Source_Term.o: Source_Term.hpp Source_Term.cpp
 	$(CC) $(CFLAGS) -c Source_Term.cpp
 
 L2_Norm.o: L2_Norm.hpp L2_Norm.cpp
 	$(CC) $(CFLAGS) -c L2_Norm.cpp
+
 WriteFile.o: WriteFile.hpp WriteFile.cpp
 	$(CC) $(CFLAGS) -c WriteFile.cpp
 
 clean:
 	rm -f core *.o Main Unit_Testing 
- 
-
