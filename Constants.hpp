@@ -7,5 +7,6 @@ const double R = R_u/MW_air; //  J/kg-K
 const double gam = 1.4;      // 
 const double T0 = 600;       // K
 const double p0 = 300e3;     // Pa
+const double p_back = 120e3; // Pa
 
 #endif

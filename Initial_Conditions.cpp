@@ -10,7 +10,7 @@ using namespace std;
     Mach #: Per Section 3, Slide 8 --> (2) Linearly varying M
 */
 
-void Initial_Conditions (int imax,int NI, vector<double> x_cell_center, vector<vector<vector<double> > > &V_cell_center, 
+void Initial_Conditions (int imax, vector<double> x_cell_center, vector<vector<vector<double> > > &V_cell_center, 
                         vector<vector<double> > &M_cell_center)
 {
     double rho, u, p, T;

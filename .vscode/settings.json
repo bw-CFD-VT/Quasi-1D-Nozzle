@@ -9,5 +9,6 @@
         "vector": "cpp",
         "ostream": "cpp"
     },
-    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+    "python.pythonPath": "/usr/local/bin/python2"
 }

@@ -8,7 +8,7 @@
 using namespace std;
 
 //---------------------------------------- Geometry Indexing -------------------------------------------------------------//
-void Geometry_Indexing(double imax, double NI, double& dx, vector<double>& x_interface, vector<double>& x_cell_center);
+void Geometry_Indexing(double imax, double& dx, vector<double>& x_interface, vector<double>& x_cell_center);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 //------------------------------------------ Nozzle Area at Cell Interface(s) -------------------------------------------// 

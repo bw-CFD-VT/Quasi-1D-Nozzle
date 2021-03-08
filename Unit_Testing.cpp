@@ -32,12 +32,12 @@ double error_tol = 1e-14;
 void Test_Geometry(void)
 {
     int imax = 4;
-    int NI = imax+1;
+    
     double dx;
 
     vector<double> x_interface, x_cell_center,Area_interface,Area_cell_center;
 
-    Geometry_Indexing(imax,NI,dx,x_interface,x_cell_center);
+    Geometry_Indexing(imax,dx,x_interface,x_cell_center);
     Area(x_interface,Area_interface);
     Area(x_cell_center,Area_cell_center);
 
@@ -53,7 +53,7 @@ void Test_Geometry(void)
     Area_cell_center_expected[2] = 0.317157287525381;
     Area_cell_center_expected[3] = 0.882842712474619;
 
-    vector<double> x_interface_expected(NI,0),Area_interface_expected(NI,0),x_interface_error(NI,0),Area_interface_error(NI,0);
+    vector<double> x_interface_expected(imax+1,0),Area_interface_expected(imax+1,0),x_interface_error(imax+1,0),Area_interface_error(imax+1,0);
     x_interface_expected[0] = -1.00000;
     x_interface_expected[1] = -0.50000;
     x_interface_expected[2] = 0.00000;
@@ -72,7 +72,7 @@ void Test_Geometry(void)
         TEST_ASSERT(x_cell_center_error[i]<error_tol);
         TEST_ASSERT(Area_cell_center_error[i]<error_tol);
     }
-    for (int i = 0; i<NI; i++)
+    for (int i = 0; i<imax+1; i++)
     {
         x_interface_error[i] = abs(x_interface[i]-x_interface_expected[i]);
         Area_interface_error[i] = abs(Area_interface[i]-Area_interface_expected[i]);
@@ -222,7 +222,7 @@ void Test_L2_Norm(void)
 void Test_Flux(void)
 {
     int counter = 0;
-    int NI = 4;
+    int imax = 3;
     vector<vector<vector<double> > > F;
 
     vector<vector<vector<double> > > V;
@@ -240,9 +240,9 @@ void Test_Flux(void)
 
     vector<vector<vector<double> > > U;
     U.resize(counter+1);
-    U[counter].resize(NI-1);
+    U[counter].resize(imax);
 
-    for (double i = 0; i<NI-1; i++)
+    for (double i = 0; i<imax; i++)
     {
         U[counter][i].resize(3);
         for (double j=0; j<3; j++)
@@ -251,10 +251,10 @@ void Test_Flux(void)
         }
     }
 
-    Flux(counter,NI,V,U,F);
+    Flux(counter,imax,V,U,F);
 
-    vector<vector<double> > F_expected(NI,vector<double>(3,0));
-    vector<vector<double> > F_error(NI,vector<double>(3,0));
+    vector<vector<double> > F_expected(imax+1,vector<double>(3,0));
+    vector<vector<double> > F_error(imax+1,vector<double>(3,0));
     F_expected[0][0] = 2.000000000000000;
     F_expected[0][1] = 7.000000000000000;
     F_expected[0][2] = 25.000000000000000;
@@ -268,7 +268,7 @@ void Test_Flux(void)
     F_expected[3][1] = 22.000000000000000;
     F_expected[3][2] = 69.000000000000000;
 
-    for (int i = 0; i<NI; i++)
+    for (int i = 0; i<imax+1; i++)
     {
         F_error[i].resize(3,0);
 

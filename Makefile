@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17 -Wall
+CFLAGS = -std=c++11 -Wall
 
 main: Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
 	$(CC) $(CFLAGS) -o Main Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
