@@ -114,8 +114,8 @@ int main()
     vector<vector<double> > L2;
     vector<double> L2_n (3,0);
     vector<vector<vector<double> > > DE;
-    double convergence_criteria = 1e-5;
-    double CFL = 0.1;
+    double convergence_criteria = 1e-6;
+    double CFL = 0.075;
 
     
       
@@ -165,8 +165,8 @@ int main()
         L2[counter][i] = L2[counter][i]/L2_n[i];
     }
 
-    if (counter>3000) CFL = 0.02;
-    if (counter>6000) CFL = 0.01;
+    if (counter>3000) CFL = 0.025;
+    if (counter>6000) CFL = 0.015;
     //---------------------------------------------------------------------------------//
 
     //---------------------- Write Output ---------------------------------------------//
