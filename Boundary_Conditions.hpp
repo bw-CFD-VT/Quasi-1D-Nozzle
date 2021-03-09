@@ -12,10 +12,9 @@
 using namespace std;
 
 //---------------------------------------- Boundary Conditions ----------------------------------------------------------//
-void Boundary_Conditions(int counter,int imax, int Case_Flag,int ghost_cell,vector<vector<vector<double> > > V_cell_center,
-                         vector<vector<double> > M_cell_center,vector<vector<vector<double> > > &V_Boundary,
-                         vector<vector<double> > &M_Boundary,vector<vector<vector<double> > > &V_ghost_inflow,
-                         vector<vector<vector<double> > > &V_ghost_outflow);
+void Boundary_Conditions(int imax, int Case_Flag,int ghost_cell,vector<vector<vector<double> > > V_cell_center,
+                         vector<double> M_cell_center,vector<vector<double> > &V_Boundary,
+                         vector<double> &M_Boundary,vector<double> &V_ghost_inflow, vector<double> &V_ghost_outflow);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 #endif

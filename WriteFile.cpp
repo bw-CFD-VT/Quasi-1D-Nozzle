@@ -7,7 +7,7 @@
 using namespace std;
 
 
-void norm_file(string filename, int counter, int imax, vector<vector<double> > v)
+void norm_file(string filename, int counter, int imax, vector<double>v)
 {   
     ofstream file(filename,std::ios_base::app);
     if (file.is_open())
@@ -16,7 +16,7 @@ void norm_file(string filename, int counter, int imax, vector<vector<double> > v
         //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<3; i++)
         {   
-            file << fixed << setprecision(14) << v[counter][i]<<",";
+            file << fixed << setprecision(14) << v[i]<<",";
         }
             file << "\n";
             file.close();
@@ -24,7 +24,7 @@ void norm_file(string filename, int counter, int imax, vector<vector<double> > v
     }
 }
 
-void mach_file(string filename, int counter, int imax, vector<vector<double> > v)
+void mach_file(string filename, int counter, int imax, vector<double> v)
 {   
     ofstream file(filename,std::ios_base::app);
     if (file.is_open())
@@ -33,7 +33,7 @@ void mach_file(string filename, int counter, int imax, vector<vector<double> > v
         //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<imax; i++)
         {   
-            file << fixed << setprecision(14) << v[counter][i]<<",";
+            file << fixed << setprecision(14) << v[i]<<",";
         }
             file << "\n";
             file.close();
@@ -50,7 +50,7 @@ void rho_file(string filename, int counter, int imax, vector<vector<vector<doubl
         //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<imax; i++)
         {   
-            file << fixed << setprecision(14) << v[counter][i][0]<<", ";
+            file << fixed << setprecision(14) << v[0][i][0]<<", ";
         }
             file << "\n";
             file.close();
@@ -66,7 +66,7 @@ void u_file(string filename, int counter, int imax, vector<vector<vector<double>
         //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<imax; i++)
         {   
-            file << fixed << setprecision(14) << v[counter][i][1]<<", ";
+            file << fixed << setprecision(14) << v[0][i][1]<<", ";
         }
             file << "\n";
             file.close();
@@ -82,7 +82,7 @@ void press_file(string filename, int counter, int imax, vector<vector<vector<dou
         //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<imax; i++)
         {   
-            file << fixed << setprecision(14) << v[counter][i][2]<<", ";
+            file << fixed << setprecision(14) << v[0][i][2]<<", ";
         }
             file << "\n";
             file.close();

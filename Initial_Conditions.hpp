@@ -13,7 +13,7 @@ using namespace std;
 
 //---------------------------------------- Initial Conditions -----------------------------------------------------------//
 void Initial_Conditions (int imax,vector<double> x_cell_center, 
-                         vector<vector<vector<double> > > &V_cell_center, vector<vector<double> > &M_cell_center);
+                         vector<vector<vector<double> > > &V_cell_center, vector<double> &M_cell_center);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 

@@ -13,7 +13,7 @@ using namespace std;
 
 //---------------------------------------- Time Step, dt @ iteration = counter ------------------------------------------//
 void Time_Step (int counter, int imax, double CFL, double dx, vector<vector<vector<double> > > V_cell_center,
-                vector<vector<double> > &lambda_max, vector<vector<double> > &a,vector<vector<double> > &dt);
+                vector<double> &lambda_max, vector<double> &a,vector<double> &dt);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 #endif

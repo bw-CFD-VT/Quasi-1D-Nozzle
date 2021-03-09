@@ -6,21 +6,16 @@
 
 using namespace std;
 
-void L2_Norm(int counter,double imax,vector<vector<vector<double> > > Residual, vector<vector<double> > &L2)
+void L2_Norm(double imax,vector<vector<double> >Residual, vector<double> &L2)
 {
-
-    L2.resize(counter+1);
-    L2[counter].resize(3,0);
-
-
     for (int j = 0; j<3; j++)
     {
         double sum = 0;
         for (int i = 0; i<imax; i++)
         {
-           sum += Residual[counter][i][j]*Residual[counter][i][j];
+           sum += Residual[i][j]*Residual[i][j];
         }
-        L2[counter][j] = sqrt(sum/imax);
+        L2[j] = sqrt(sum/imax);
     }
 
     return;

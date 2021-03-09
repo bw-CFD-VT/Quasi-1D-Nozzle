@@ -9,33 +9,25 @@
 
 using namespace std;
 
-void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int ghost_cell, vector<vector<double> > lambda_max, 
+void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int ghost_cell, vector<double>lambda_max, 
                             vector<vector<vector<double> > > V_cell_center, vector<vector<vector<double> > > U_cell_center,
-                            vector<vector<vector<double> > > V_ghost_inflow, vector<vector<vector<double> > >U_ghost_inflow,
-                            vector<vector<vector<double> > > V_ghost_outflow, vector<vector<vector<double> > >U_ghost_outflow,
-                            vector<vector<vector<double> > > &d)
+                            vector<double> V_ghost_inflow, vector<double> U_ghost_inflow,
+                            vector<double> V_ghost_outflow, vector<double> U_ghost_outflow,
+                            vector<vector<double> >&d)
 {
 
 
     //------------------- Setup Vector of Cell Pressure For Artificial Dissipation Calc --------------------//
     vector<double> Cell_Pressure(imax+2*ghost_cell,0);
 
-    for (int i = 0; i<ghost_cell; i++)
-    {
-        Cell_Pressure[i] = V_ghost_inflow[counter][i][2];
-        Cell_Pressure[i+imax+ghost_cell] = V_ghost_outflow[counter][i][2];
-    }
+    Cell_Pressure[0] = V_ghost_inflow[2];
+    Cell_Pressure[imax+ghost_cell] = V_ghost_outflow[2];
+
 
     for (int i = 0; i<imax; i++)
     {
-        Cell_Pressure[i+ghost_cell] = V_cell_center[counter][i][2];
+        Cell_Pressure[i+ghost_cell] = V_cell_center[0][i][2];
     }
-
-    // for (int i = 0; i<imax+2*ghost_cell;i++)
-    // {
-    //     cout<<Cell_Pressure[i]<<endl;
-  
-    // }
     //------------------------------------------------------------------------------------------------------//
 
     //------------------- Setup Vector of Conserved Variables For Artificial Dissipation Calc --------------//
@@ -45,8 +37,8 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int gho
     {
         for (int j = 0; j<3; j++)
         {
-            U_dissipation[i][j] = U_ghost_inflow[counter][i][j];
-            U_dissipation[i+imax+ghost_cell][j] = U_ghost_outflow[counter][i][j];
+            U_dissipation[i][j] = U_ghost_inflow[j];
+            U_dissipation[i+imax+ghost_cell][j] = U_ghost_outflow[j];
         }
     }
     
@@ -54,21 +46,12 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int gho
     {
         for (int j = 0; j<3; j++)
         {
-            U_dissipation[i+ghost_cell][j] = U_cell_center[counter][i][j];
+            U_dissipation[i+ghost_cell][j] = U_cell_center[0][i][j];
         }
     }
-
-    // for (int i = 0; i<imax+2*ghost_cell; i++)
-    // {
-    //     cout<<U_dissipation[i][0]<<", "<<U_dissipation[i][1]<<", "<<U_dissipation[i][2]<<endl;
-    // }
-
     //------------------------------------------------------------------------------------------------------//
 
-
-    d.resize(counter+1);
-    d[counter].resize(imax+1,vector<double>(3,0));
-
+    //-------------------------------- Artificial Dissipation Term -----------------------------------------//
     double lambda_half;
     vector<double> v(imax+2*ghost_cell,0); // Pressure sensor vector
 
@@ -83,28 +66,25 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int gho
 
     for (int i = 2; i<imax-1; i++)
     {   
-        lambda_half = 0.5*(lambda_max[counter][i]+lambda_max[counter][i-1]);
-        //  cout<<lambda_half<<endl;
-        eps_half_2 = K_2*max_v(v[i-1],v[i],v[i+1],v[i+2]);
-        //  cout<<eps_half_2<<endl; 
+        lambda_half = 0.5*(lambda_max[i]+lambda_max[i-1]);
+        eps_half_2 = K_2*max_v(v[i-1],v[i],v[i+1],v[i+2]); 
         eps_half_4 = max(0.0,(K_4-eps_half_2));
-        // cout<<eps_half_4<<endl; 
+      
         for (int j = 0; j<3; j++)
         {
             double D_1 = 0, D_3 = 0;
             D_1 = lambda_half*eps_half_2*(U_dissipation[i+1][j]-U_dissipation[i][j]);
             D_3= lambda_half*eps_half_4*(U_dissipation[i+2][j]-3*U_dissipation[i+1][j]+3*U_dissipation[i][j]-U_dissipation[i-1][j]);
-            d[counter][i][j] = D_3-D_1;
+            d[i][j] = D_3-D_1;
         }
-        //  cout<<d[counter][i][0]<<"\t"<<d[counter][i][1]<<"\t"<<d[counter][i][2]<<"\t"<<endl;
     }
 
     for (int j = 0; j<3; j++)
     {
-        d[counter][1][j] = 2*d[counter][2][j]-d[counter][3][j];
-        d[counter][0][j] = 2*d[counter][1][j]-d[counter][2][j];
-        d[counter][imax-1][j] = 2*d[counter][imax-2][j]-d[counter][imax-3][j];
-        d[counter][imax][j] = 2*d[counter][imax-1][j]-d[counter][imax-2][j];
+        d[1][j] = 2*d[2][j]-d[3][j];
+        d[0][j] = 2*d[1][j]-d[2][j];
+        d[imax-1][j] = 2*d[imax-2][j]-d[imax-3][j];
+        d[imax][j] = 2*d[imax-1][j]-d[imax-2][j];
     }
 
     return;

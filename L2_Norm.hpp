@@ -13,7 +13,7 @@ using namespace std;
 
 
 //------------------------- Calculate L2 Norm----------------------------------------------------------------------------//
-void L2_Norm(int counter,double imax,vector<vector<vector<double> > > Residual, vector<vector<double> > &L2);
+void L2_Norm(double imax,vector<vector<double> >Residual, vector<double> &L2);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 

@@ -12,15 +12,15 @@
 using namespace std;
 
 
-//------------------------- Artificial Dissipation Vector, d @ iteration = counter ---------------------------------------//
-void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int ghost_cell, vector<vector<double> > lambda_max, 
+//------------------------- Artificial Dissipation Vector ---------------------------------------------------------------//
+void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int ghost_cell, vector<double>lambda_max, 
                             vector<vector<vector<double> > > V_cell_center, vector<vector<vector<double> > > U_cell_center,
-                            vector<vector<vector<double> > > V_ghost_inflow, vector<vector<vector<double> > >U_ghost_inflow,
-                            vector<vector<vector<double> > > V_ghost_outflow, vector<vector<vector<double> > >U_ghost_outflow,
-                            vector<vector<vector<double> > > &d);
+                            vector<double> V_ghost_inflow, vector<double> U_ghost_inflow,
+                            vector<double> V_ghost_outflow, vector<double> U_ghost_outflow,
+                            vector<vector<double> >&d);
 //-----------------------------------------------------------------------------------------------------------------------//
 
-//------------------------- max value of pressure sensor to be used at ith cell -----------------------------------------//
+//------------------------- Pressure Sensor -> Determine max(v(i-1),v(i),v(i+1),v(i+2)) ---------------------------------//
 double max_v (double v_im1, double v_i, double v_ip1, double v_ip2);
 //-----------------------------------------------------------------------------------------------------------------------//
 

@@ -9,25 +9,17 @@
 using namespace std;
 
 void Time_Step (int counter, int imax, double CFL, double dx, vector<vector<vector<double> > > V_cell_center,
-                vector<vector<double> > &lambda_max, vector<vector<double> > &a,vector<vector<double> > &dt)
+                vector<double> &lambda_max, vector<double> &a,vector<double> &dt)
 {
 
-    a.resize(counter+1);
-    a[counter].resize(imax,0);
-
-    lambda_max.resize(counter+1);
-    lambda_max[counter].resize(imax,0);
-
-    dt.resize(counter+1);
-    dt[counter].resize(imax,0);
-
+ 
     for (int i = 0; i<imax; i++)
     {
-        Sound_Speed(V_cell_center[counter][i][0],V_cell_center[counter][i][2],a[counter][i]);
-        lambda_max[counter][i] = abs(V_cell_center[counter][i][1])+ a[counter][i];
-        dt[counter][i] = CFL*dx/lambda_max[counter][i];
-        // cout<<dt[counter][i]<<endl;
-        // cout<<lambda_max[counter][i]<<endl;
+        Sound_Speed(V_cell_center[0][i][0],V_cell_center[0][i][2],a[i]);
+        lambda_max[i] = abs(V_cell_center[0][i][1])+ a[i];
+        dt[i] = CFL*dx/lambda_max[i];
+        // cout<<dt[i]<<endl;
+        // cout<<lambda_max[i]<<endl;
        
     }
 
