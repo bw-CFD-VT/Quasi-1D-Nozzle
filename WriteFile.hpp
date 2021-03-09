@@ -1,3 +1,7 @@
+// AOE 6145
+// Homework 2: Quasi-1D Nozzle FVM Code
+// Brendan Walsh (PID: bwalsh4)
+
 #ifndef WRITE_FILE_HPP
 #define WRITE_FILE_HPP
 
@@ -14,6 +18,12 @@ void rho_file(string filename, int counter, int imax, vector<vector<vector<doubl
 void press_file(string filename, int counter, int imax, vector<vector<vector<double> > >v);
 void u_file(string filename, int counter, int imax, vector<vector<vector<double> > >v);
 void exact_file(string filename, const vector<vector<double> > v);
+void clear_existing_file();
 
+
+//---------------------------------------- Time Step, dt @ iteration = counter ------------------------------------------//
+void Time_Step (int counter, int imax, double CFL, double dx, vector<vector<vector<double> > > V_cell_center,
+                vector<vector<double> > &lambda_max, vector<vector<double> > &a,vector<vector<double> > &dt);
+//-----------------------------------------------------------------------------------------------------------------------//
 
 #endif

@@ -1,3 +1,7 @@
+# AOE 6145
+# Homework 2: Quasi-1D Nozzle FVM Code
+# Brendan Walsh (PID: bwalsh4)
+
 CC = g++
 CFLAGS = -std=c++11 -Wall
 

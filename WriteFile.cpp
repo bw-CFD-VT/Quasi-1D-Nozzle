@@ -1,3 +1,7 @@
+// AOE 6145
+// Homework 2: Quasi-1D Nozzle FVM Code
+// Brendan Walsh (PID: bwalsh4)
+
 #include "WriteFile.hpp"
 
 using namespace std;
@@ -102,4 +106,18 @@ void exact_file(string filename, const vector<vector<double> > v)
         }
         file.close();
     }
+}
+
+
+void clear_existing_file()
+{
+
+    if( remove( "norm.txt" ) != 0 || remove( "mach.txt" ) != 0 || remove( "rho.txt" ) != 0 
+        || remove( "u.txt" ) != 0 || remove( "press.txt" ) != 0)
+
+    perror( "Error deleting file" );
+
+  else
+
+    puts( "File successfully deleted" );
 }

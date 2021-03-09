@@ -7,8 +7,10 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
  
+make: *** No rule to make target `all'.  Stop.
+ 
 
-# Make data base, printed on Mon Mar  8 11:24:57 2021
+# Make data base, printed on Mon Mar  8 19:37:32 2021
 
 # Variables
 
@@ -32,7 +34,7 @@ SHELL = /bin/sh
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
-# makefile (from `Makefile', line 2)
+# makefile (from `Makefile', line 6)
 CFLAGS = -std=c++11 -Wall
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
@@ -84,7 +86,7 @@ MAKE = $(MAKE_COMMAND)
 MAKECMDGOALS := all
 # environment
 SHLVL = 2
-# makefile (from `Makefile', line 1)
+# makefile (from `Makefile', line 5)
 CC = g++
 # default
 MAKE_VERSION := 3.81
@@ -133,6 +135,7 @@ MAKELEVEL := 0
 # environment
 VSCODE_PID = 37860
 # variable set hash-table stats:
+ 
 # Load=60/1024=6%, Rehash=0, Collisions=1/84=1%
 
 # Pattern-specific Variable Values
@@ -141,9 +144,9 @@ VSCODE_PID = 37860
 
 # Directories
 
-# . (device 16777222, inode 8624281870): 65 files, no impossibilities.
+# . (device 16777222, inode 8624281870): 64 files, no impossibilities.
 
-# 65 files, no impossibilities in 1 directories.
+# 64 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -188,15 +191,16 @@ Isentropic_Flow.o: Isentropic_Flow.hpp Isentropic_Flow.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 20):
+#  commands to execute (from `Makefile', line 24):
 	$(CC) $(CFLAGS) -c Isentropic_Flow.cpp 
 	
+ 
 
 Unit_Testing: Unit_Testing.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 8):
+#  commands to execute (from `Makefile', line 12):
 	$(CC) $(CFLAGS) -o Unit_Testing Unit_Testing.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
 	
 
@@ -222,7 +226,7 @@ Artifical_Dissipation.o: Artificial_Dissipation.hpp Artificial_Dissipation.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 38):
+#  commands to execute (from `Makefile', line 42):
 	$(CC) $(CFLAGS) -c Artificial_Dissipation.cpp
 	
 
@@ -235,7 +239,7 @@ Artifical_Dissipation.o: Artificial_Dissipation.hpp Artificial_Dissipation.cpp
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-03-07 20:57:35
+#  Last modified 2021-03-08 19:37:31
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -251,13 +255,14 @@ TimeStep.o: TimeStep.hpp TimeStep.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 29):
+#  commands to execute (from `Makefile', line 33):
 	$(CC) $(CFLAGS) -c TimeStep.cpp 
 	
 
 # Not a target:
 Geometry.cpp:
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -277,7 +282,7 @@ SoundSpeed.o: SoundSpeed.hpp SoundSpeed.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 26):
+#  commands to execute (from `Makefile', line 30):
 	$(CC) $(CFLAGS) -c SoundSpeed.cpp 
 	
 
@@ -291,7 +296,7 @@ WriteFile.o: WriteFile.hpp WriteFile.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 47):
+#  commands to execute (from `Makefile', line 51):
 	$(CC) $(CFLAGS) -c WriteFile.cpp
 	
 
@@ -304,9 +309,6 @@ L2_Norm.cpp:
 # Not a target:
 Flux.hpp:
 #  Implicit rule search has not been done.
- 
-make: *** No rule to make target `all'.  Stop.
- 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -332,7 +334,7 @@ Source_Term.o: Source_Term.hpp Source_Term.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 41):
+#  commands to execute (from `Makefile', line 45):
 	$(CC) $(CFLAGS) -c Source_Term.cpp
 	
 
@@ -364,7 +366,7 @@ Exact_Isentropic.o: Exact_Isentropic.hpp Exact_Isentropic.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 23):
+#  commands to execute (from `Makefile', line 27):
 	$(CC) $(CFLAGS) -c Exact_Isentropic.cpp
 	
 
@@ -378,15 +380,16 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 50):
+#  commands to execute (from `Makefile', line 54):
 	rm -f core *.o Main Unit_Testing 
 	
 
 VariableSwap.o: VariableSwap.hpp VariableSwap.cpp
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 32):
+#  commands to execute (from `Makefile', line 36):
 	$(CC) $(CFLAGS) -c VariableSwap.cpp
 	
 
@@ -394,7 +397,7 @@ Flux.o: Flux.hpp Flux.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 35):
+#  commands to execute (from `Makefile', line 39):
 	$(CC) $(CFLAGS) -c Flux.cpp 
 	
 
@@ -414,7 +417,7 @@ Geometry.o: Geometry.hpp Geometry.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 11):
+#  commands to execute (from `Makefile', line 15):
 	$(CC) $(CFLAGS) -c Geometry.cpp
 	
 
@@ -434,7 +437,7 @@ main: Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Fl
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 5):
+#  commands to execute (from `Makefile', line 9):
 	$(CC) $(CFLAGS) -o Main Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
 	
 
@@ -442,7 +445,7 @@ Boundary_Conditions.o: Boundary_Conditions.hpp Boundary_Conditions.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 17):
+#  commands to execute (from `Makefile', line 21):
 	$(CC) $(CFLAGS) -c Boundary_Conditions.cpp 
 	
 
@@ -450,7 +453,7 @@ L2_Norm.o: L2_Norm.hpp L2_Norm.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 44):
+#  commands to execute (from `Makefile', line 48):
 	$(CC) $(CFLAGS) -c L2_Norm.cpp
 	
 
@@ -464,13 +467,14 @@ TimeStep.cpp:
 Isentropic_Flow.hpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 
 Initial_Conditions.o: Initial_Conditions.hpp Initial_Conditions.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 14):
+#  commands to execute (from `Makefile', line 18):
 	$(CC) $(CFLAGS) -c Initial_Conditions.cpp 
 	
 
@@ -499,6 +503,6 @@ WriteFile.cpp:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Mon Mar  8 11:24:57 2021
+# Finished Make data base on Mon Mar  8 19:37:32 2021
 
  

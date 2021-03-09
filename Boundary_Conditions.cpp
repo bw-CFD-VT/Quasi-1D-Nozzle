@@ -1,3 +1,7 @@
+// AOE 6145
+// Homework 2: Quasi-1D Nozzle FVM Code
+// Brendan Walsh (PID: bwalsh4)
+
 #include "Boundary_Conditions.hpp"
 #include "Isentropic_Flow.hpp"
 #include "Constants.hpp"    
@@ -41,10 +45,10 @@ void Boundary_Conditions(int counter,int imax, int Case_Flag,int ghost_cell,vect
    
      M_Boundary[counter][0] = 0.5*(M_ghost_inflow[0]+M_cell_center[counter][0]);
 
-     if (M_Boundary[counter][0]<0)
-     {
-        M_Boundary[counter][0] = 0.001;
-     }
+   //   if (M_Boundary[counter][0]<0)
+   //   {
+   //      M_Boundary[counter][0] = 0.001;
+   //   }
 
      Isentropic_Flow(M_Boundary[counter][0],rho, u, p, T);
      V_Boundary[counter][0] = {rho, u, p};

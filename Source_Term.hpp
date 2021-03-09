@@ -1,3 +1,7 @@
+// AOE 6145
+// Homework 2: Quasi-1D Nozzle FVM Code
+// Brendan Walsh (PID: bwalsh4)
+
 #ifndef SOURCE_TERM_HPP
 #define SOURCE_TERM_HPP
 

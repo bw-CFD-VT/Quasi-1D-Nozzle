@@ -1,3 +1,7 @@
+// AOE 6145
+// Homework 2: Quasi-1D Nozzle FVM Code
+// Brendan Walsh (PID: bwalsh4)
+
 #include "Exact_Isentropic.hpp"
 #include "Constants.hpp"
 #include "iomanip"
@@ -65,16 +69,11 @@ void Mach(double M_initial, double A_bar, double es, double &M)
     M_k = M_initial;    //Initialize Mach # at iteration k to be initial guess pending where in nozzle (supersonic vs. subsonic)
                         //Initial guess is passed from isentropic_nozzle function
 
-    int i = 0;          //Initialize counter for iteration purposes:
-                        //1)
-                        //In order to address that after the first iteration
-                        //Mach # at iteration k is Mach  # previously determined as Mach # at iteration k+1
-                        //2)
-                        //Failsafe incase get stuck in infinite loop
+    int counter = 0;         
 
     do
     {
-        if (i>0)
+        if (counter>0)
         {
           M_k = M_kp1;
         }
@@ -88,9 +87,9 @@ void Mach(double M_initial, double A_bar, double es, double &M)
 
         ea = abs((M_kp1-M_k)/M_kp1); //compute current iterations error
         // cout<<F_k<<endl;
-        i++;                         //loop counter
+        counter++;                         //loop counter
 
-            if (i>1e5)  //Failsafe incase there was a reason it would get stuck iterating
+            if (counter>10e3)  //Failsafe incase there was a reason it would get stuck iterating
             {
             cout<<"Stuck in Loop, Quitting";
             break;

@@ -22,32 +22,16 @@
 #include <stdio.h>
 using namespace std;
 
-void clear_existing_file()
-{
-    remove( "mach.txt" ); remove ( "rho.txt" ); remove ( "u.txt" ); remove ( "press.txt" );
-    if( remove( "norm.txt" ) != 0 )
-    perror( "Error deleting file" );
-  else
-    puts( "File successfully deleted" );
-}
-
-
-string exactfile = "Exact_Solution_Isentropic.txt";
-string normfile = "norm.txt";
-string machfile = "mach.txt";
-string rhofile = "rho.txt";
-string ufile = "u.txt";
-string pressfile = "press.txt";
-
 int main()
 {
-    clear_existing_file();
+    clear_existing_file(); //Delete existing files that will be written to
+
     int Case_Flag=1;
     // cout<<"\n"<<"Choose Case"<<"\n"<<"(1): Supersonic (Isentropic)"<<"\n"
     //        <<"(2): Subsonic (Shock in Nozzle)"<<"\n"<<endl;
     // cin>>Case_Flag;
 
-    int imax = 18;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
+    int imax = 20;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
     double dx;
 
 
@@ -131,7 +115,7 @@ int main()
     vector<double> L2_n (3,0);
     vector<vector<vector<double> > > DE;
     double convergence_criteria = 1e-5;
-    double CFL = 0.01;
+    double CFL = 0.1;
 
     
       
@@ -180,6 +164,9 @@ int main()
     {
         L2[counter][i] = L2[counter][i]/L2_n[i];
     }
+
+    if (counter>3000) CFL = 0.02;
+    if (counter>6000) CFL = 0.01;
     //---------------------------------------------------------------------------------//
 
     //---------------------- Write Output ---------------------------------------------//
@@ -218,14 +205,9 @@ int main()
     primative_to_conserved(counter,V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(counter,V_ghost_outflow,U_ghost_outflow); 
     //---------------------------------------------------------------------------------//
-    // }while(counter<4000);
+
+  
     } while (L2[counter-1][0]>convergence_criteria && L2[counter-1][1] > convergence_criteria && L2[counter-1][2] > convergence_criteria);
     //-------------------------------------------------------------------------------------------------------------------------//
     cout<<"Broke Loop"<<endl;
-
-
-
-  
-    
-
 };

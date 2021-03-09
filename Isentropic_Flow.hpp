@@ -1,3 +1,7 @@
+// AOE 6145
+// Homework 2: Quasi-1D Nozzle FVM Code
+// Brendan Walsh (PID: bwalsh4)
+
 #ifndef ISENTROPIC_FLOW_HPP
 #define ISENTROPIC_FLOW_HPP
 
