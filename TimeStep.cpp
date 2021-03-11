@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void Time_Step (int counter, int imax, double CFL, double dx, vector<vector<vector<double> > > V_cell_center,
+void Time_Step (int imax, double CFL, double dx, vector<vector<vector<double> > > V_cell_center,
                 vector<double> &lambda_max, vector<double> &a,vector<double> &dt)
 {
 

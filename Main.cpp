@@ -4,6 +4,7 @@
 
 // Central Flux Quadrature
 // JST Artificial Dissipation
+// 1 Ghost Cell at Inflow and Outflow
 
 #include "Constants.hpp"
 #include "Geometry.hpp"
@@ -20,6 +21,7 @@
 #include "L2_Norm.hpp"
 #include "WriteFile.hpp"
 #include <stdio.h>
+
 using namespace std;
 
 int main()
@@ -27,16 +29,14 @@ int main()
     clear_existing_file(); //Delete existing files that will be written to
 
     int Case_Flag=1;
-    // cout<<"\n"<<"Choose Case"<<"\n"<<"(1): Supersonic (Isentropic)"<<"\n"
-    //        <<"(2): Subsonic (Shock in Nozzle)"<<"\n"<<endl;
-    // cin>>Case_Flag;
 
     int imax = 18;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
-    double dx;
+    
 
 
     //---------------------------------------- Nozzle Geometry Evaluation -----------------------------------------------------//
     vector<double> x_interface, x_cell_center,Area_interface,Area_cell_center;
+    double dx;
 
     Geometry_Indexing(imax,dx,x_interface,x_cell_center);
     Area(x_interface,Area_interface);
@@ -44,27 +44,10 @@ int main()
     //-------------------------------------------------------------------------------------------------------------------------//
     
     //---------------------------------------- Exact Solution (Isentropic) ----------------------------------------------------//
-    
-    if (Case_Flag == 1)
-    {
-        vector<double> M_exact(imax,0),rho_exact(imax,0), u_exact(imax,0), p_exact(imax,0), T_exact(imax,0);
-    
-        Isentropic_Nozzle_Exact(imax,x_cell_center,Area_cell_center,M_exact,rho_exact,u_exact,p_exact,T_exact);
-        vector<vector<double> > exact_soln(7,vector<double>(imax,0));
-
-            for (int i = 0; i<imax; i++)
-            {
-                exact_soln[0][i]=x_cell_center[i];
-                exact_soln[1][i]=Area_cell_center[i];
-                exact_soln[2][i]=M_exact[i];
-                exact_soln[3][i]=rho_exact[i];
-                exact_soln[4][i]=u_exact[i];
-                exact_soln[5][i]=p_exact[i];
-                exact_soln[6][i]=T_exact[i];
-            } 
-        exact_file(exactfile,exact_soln);
-    }
-
+    vector<vector<double> > V_exact(imax,vector<double>(3,0));
+    vector<vector<double> > U_exact(imax,vector<double>(3,0));
+    vector<double> M_exact(imax,0),rho_exact(imax,0), u_vel_exact(imax,0), p_exact(imax,0), T_exact(imax,0);
+    Exact_Solution(imax,x_cell_center,Area_cell_center,M_exact,rho_exact,u_vel_exact,p_exact,T_exact,V_exact,U_exact);
     //-------------------------------------------------------------------------------------------------------------------------//
 
 
@@ -80,22 +63,17 @@ int main()
     vector<double> U_ghost_inflow(3,0);    // Matrix of Conserved Variable Vectors @ outfow ghost cell(s), U = [U1,U2,U3]
     vector<double> U_ghost_outflow(3,0);   // Matrix of Conserved Variable Vectors @ outfow ghost cell(s), U = [U1,U2,U3]
 
-    int counter = 0;
-    
     Initial_Conditions(imax,x_cell_center,V_cell_center,M_cell_center);
     for (int i = 0; i<imax; i++) primative_to_conserved(V_cell_center[0][i],U_cell_center[0][i]);
 
     Boundary_Conditions(imax,Case_Flag,ghost_cell,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
     primative_to_conserved(V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(V_ghost_outflow,U_ghost_outflow);
-
-
     //-------------------------------------------------------------------------------------------------------------------------//
 
 
 
     //------------------------------------------------- MAIN LOOP -------------------------------------------------------------//
-  
     vector<vector<double> > F(imax+1,vector<double>(3,0));          // Vector of Flux Variables, F = [F1,F2,F3]
     vector<vector<double> > d(imax+1,vector<double>(3,0));          // Vector of Artificial Dissipation term, d = [d1,d2,d3] 
     vector<double> dt(imax,0);                                      // Vector of local step time
@@ -103,29 +81,30 @@ int main()
     vector<double> lambda_max(imax,0);                              // Vector of local max eigenvalue |u| + a
     vector<vector<double> > Residual(imax,vector<double>(3,0));     // Steady-State residual vector
     vector<vector<double> > SourceTerm(imax,vector<double>(3,0));   // Vectorof Source Term, S = [S1,S2,S3] [
-    double K_2 = 0.25;                                               // Aritifical Dissipation constant (2nd order damping term)
-    double K_4 = 2*0.015625;                                        // Aritifical Dissipation constant (4th order damping term)
-    vector<double> Primative_Limits(3,0);
-    Primative_Limits[0] = 0.1; Primative_Limits[1] = 50; Primative_Limits[2] = 500;
+    // double K_2 = 1.5*0.25;                                               // Aritifical Dissipation constant (2nd order damping term)
+    // double K_4 = 0.015625;                                          // Aritifical Dissipation constant (4th order damping term)
+    double K_2 = 0.00;                                               // Aritifical Dissipation constant (2nd order damping term)
+    double K_4 = 2*0.015625; 
 
     //------------- Iterative Convergence Variable(s) ---------//
-    vector<double> L2(imax,0);
+    int counter = 0;
+    vector<double> L2_norm_residual(3,0);
     vector<double> L2_n (3,0);
-    vector<vector<vector<double> > > DE;
     double convergence_criteria = 1e-10;
-    double CFL = 0.1;
-
+    // double CFL = .01;//SHOCK
+    double CFL = .1;
     do
     {  
 
     //---------------------- MAIN ITERATION ---------------------------------------//  
-    Time_Step(counter,imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
+    if(counter%1000 == 0) cout<<"Iteration: "<<counter<<endl;
+    Time_Step(imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
     Flux(imax,V_Boundary,U_cell_center,F);
-    Artifical_Dissipation(K_2,K_4,counter,imax,ghost_cell,lambda_max,V_cell_center,U_cell_center,V_ghost_inflow,U_ghost_inflow,V_ghost_outflow,U_ghost_outflow,d);
-    Source_Term(counter,imax,dx, Area_interface,V_cell_center,SourceTerm);
+    Artifical_Dissipation(K_2,K_4,imax,ghost_cell,lambda_max,V_cell_center,U_cell_center,V_ghost_inflow,U_ghost_inflow,V_ghost_outflow,U_ghost_outflow,d);
+    Source_Term(imax,dx, Area_interface,V_cell_center,SourceTerm);
     
     double d_t = *std::min_element(dt.begin(),dt.end()); //If global time step -> replace dt below
-
+    
     for (int i = 0; i<imax; i++)
     {
         for (int j = 0; j<3; j++)
@@ -141,51 +120,40 @@ int main()
     //----------------------------------------------------------------------------//    
     
 
-   //---------------------- Monitor Convergence (L2 Norm) ------------------------//
-    L2_Norm(imax,Residual,L2);
-    
-    if (counter == 0)
+   //---------------------- Calculate L2 Residual Norm --------------------------------//
+    L2_Norm(imax,Residual,L2_norm_residual);
+ 
+    if (counter == 0) //Initial Residual Norm Used to Scale Remaining Calculated Norms
     {
-        L2_n[0] = L2[0];   L2_n[1] = L2[1];   L2_n[2] = L2[2];
+        L2_n[0] = L2_norm_residual[0];   L2_n[1] = L2_norm_residual[1];   L2_n[2] = L2_norm_residual[2];
     }
 
     for (int i = 0; i<3; i++)
     {
-        L2[i] = L2[i]/L2_n[i];
+        L2_norm_residual[i] = L2_norm_residual[i]/L2_n[i];
     }
-
-    // if (counter>4000)
-    // {
-    //     CFL = 0.25;
-    // }
     //---------------------------------------------------------------------------------//
+
 
     //---------------------- Write Output ---------------------------------------------//
-    if (counter%10 == 0)
+    if (counter%100 == 0)
     {
-        norm_file(normfile,counter,imax,L2);
+        residual_norm_file(residualnormfile,counter,imax,L2_norm_residual);
         mach_file(machfile,counter,imax,M_cell_center);
-        rho_file(rhofile,counter,imax,V_cell_center);
-        press_file(pressfile,counter,imax,V_cell_center);
-        u_file(ufile,counter,imax,V_cell_center);
+        prim_variable_file(rhofile,0,counter,imax,V_cell_center);
+        prim_variable_file(ufile,1,counter,imax,V_cell_center);
+        prim_variable_file(pressfile,2,counter,imax,V_cell_center);
+        prim_variable_file(tempfile,3,counter,imax,V_cell_center);
     }
     //---------------------------------------------------------------------------------//
 
-    counter++;
-    if (counter%100 == 0)  cout<<"Counter: "<<counter<<endl;  
 
+    //----------- Update Conserved + Primative Variable to be at step n ---------------//
+    counter++; 
     U_cell_center[0] = U_cell_center[1];
     for (int i = 0; i<imax; i++) conserved_to_primative(U_cell_center[0][i],V_cell_center[0][i]);
-
-    for (int i = 0; i<imax; i++) 
-    {
-        for (int j = 0; j<3; j++)
-        {
-            V_cell_center[0][i][j] = max(V_cell_center[0][i][j],Primative_Limits[j]);
-        }
-    }
-
-    for (int i = 0; i<imax; i++) primative_to_conserved(V_cell_center[0][i],U_cell_center[0][i]);
+    for (int i = 0; i<imax; i++) primative_to_conserved(V_cell_center[0][i],U_cell_center[0][i]); //Due to limiting prim. variables
+    //---------------------------------------------------------------------------------//
 
     //---------------------- Update Mach Number ---------------------------------------//
     for (int i = 0; i<imax; i++)
@@ -196,15 +164,50 @@ int main()
     }
     //---------------------------------------------------------------------------------//
 
-
     //---------------------- Update Boundary Conditions -------------------------------//
     Boundary_Conditions(imax,Case_Flag,ghost_cell,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
     primative_to_conserved(V_ghost_inflow,U_ghost_inflow);
     primative_to_conserved(V_ghost_outflow,U_ghost_outflow); 
     //---------------------------------------------------------------------------------//
 
-  
-    } while (L2[0]>convergence_criteria && L2[1] > convergence_criteria && L2[2] > convergence_criteria);
+
+    } while (L2_norm_residual[0]>convergence_criteria && L2_norm_residual[1] > convergence_criteria && L2_norm_residual[2] > convergence_criteria);
     //-------------------------------------------------------------------------------------------------------------------------//
-    cout<<"Solution Converged"<<endl;
+    
+    cout<<"Solution Converged at Iteration: "<< counter <<", "<<M_cell_center[imax-1]<<endl;
+
+    //---------------------- Write Converged Solution(s)-------------------------------//
+    residual_norm_file(residualnormfile,counter,imax,L2_norm_residual);
+    mach_file(machfile,counter,imax,M_cell_center);
+    prim_variable_file(rhofile,0,counter,imax,V_cell_center);
+    prim_variable_file(ufile,1,counter,imax,V_cell_center);
+    prim_variable_file(pressfile,2,counter,imax,V_cell_center);
+    prim_variable_file(tempfile,3,counter,imax,V_cell_center);
+    //---------------------------------------------------------------------------------//
+    
+   
+    //-------------- Calculate DE for prim. + cons. variables (Case (1))---------------//
+    vector<vector<double> > DE_U(imax,vector<double>(3,0));
+    vector<vector<double> > DE_V(imax,vector<double>(3,0));
+    vector<double> L2_norm_error(3,0);
+
+    if (Case_Flag == 1)
+    {
+
+        for (int i = 0; i<imax; i++)
+        {
+            for (int j = 0; j<3; j++)
+            {
+                DE_U[i][j] = U_cell_center[0][i][j] - U_exact[i][j];
+                DE_V[i][j] = V_cell_center[0][i][j] - V_exact[i][j];
+            }
+
+        }
+        L2_Norm(imax,DE_U,L2_norm_error);
+        error_norm_file(errornormfile_U,imax,L2_norm_error);
+
+        L2_Norm(imax,DE_V,L2_norm_error);
+        error_norm_file(errornormfile_V,imax,L2_norm_error);
+    }
+    //---------------------------------------------------------------------------------//
 };

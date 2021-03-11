@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int ghost_cell, vector<double>lambda_max, 
+void Artifical_Dissipation (double K_2, double K_4,int imax, int ghost_cell, vector<double>lambda_max, 
                             vector<vector<vector<double> > > V_cell_center, vector<vector<vector<double> > > U_cell_center,
                             vector<double> V_ghost_inflow, vector<double> U_ghost_inflow,
                             vector<double> V_ghost_outflow, vector<double> U_ghost_outflow,
@@ -64,7 +64,7 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int gho
              abs(Cell_Pressure[i+1]+(2*Cell_Pressure[i])+Cell_Pressure[i-1]);
     }
 
-    for (int i = 2; i<imax-1; i++)
+    for (int i = 1; i<imax; i++)
     {   
         lambda_half = 0.5*(lambda_max[i]+lambda_max[i-1]);
         eps_half_2 = K_2*max_v(v[i-1],v[i],v[i+1],v[i+2]); 
@@ -81,9 +81,7 @@ void Artifical_Dissipation (double K_2, double K_4,int counter,int imax, int gho
 
     for (int j = 0; j<3; j++)
     {
-        d[1][j] = 2*d[2][j]-d[3][j];
         d[0][j] = 2*d[1][j]-d[2][j];
-        d[imax-1][j] = 2*d[imax-2][j]-d[imax-3][j];
         d[imax][j] = 2*d[imax-1][j]-d[imax-2][j];
     }
 

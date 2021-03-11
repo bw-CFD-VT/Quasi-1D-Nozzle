@@ -9,14 +9,14 @@ using namespace std;
 //---------------------------------------- Geometry Indexing -------------------------------------------------------------//
 void Geometry_Indexing(double imax, double& dx, vector<double>& x_interface, vector<double>& x_cell_center)
 {
-    double Nozzle_Length = 2;
-    double imin = -1;           //Start of converging section
+    double Nozzle_Length = 2.0;
+    double imin = -1.0;           //Start of converging section
 
     x_interface.resize(imax+1,0);
     x_cell_center.resize(imax,0); 
     
     dx = Nozzle_Length/imax; //Step size determined from number of cells selected
-    double half_dx = dx/2;   
+    double half_dx = dx/2.0;   
 
     for (double i = 0; i<imax+1; i++)
     {

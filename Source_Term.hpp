@@ -13,7 +13,7 @@ using namespace std;
 
 
 //------------------------- Calculate Source Term -----------------------------------------------------------------------//
-void Source_Term (int counter,double imax,double dx, vector<double> Area_interface,
+void Source_Term (double imax,double dx, vector<double> Area_interface,
                   vector<vector<vector<double> > > V_cell_center,vector<vector<double> > &SourceTerm);
 //-----------------------------------------------------------------------------------------------------------------------//
 

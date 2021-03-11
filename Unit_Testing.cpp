@@ -101,7 +101,6 @@ void Test_Sound_Speed(void)
 
 void Test_Time_Step(void)
 {
-    int counter =0;
     double CFL = 0.5;
     double dx = 0.5;
     int imax = 1;
@@ -119,7 +118,7 @@ void Test_Time_Step(void)
     vector<double> lambda_max(imax,0);
     vector<double> a(imax,0);
     vector<double> dt(imax,0);
-    Time_Step(counter,imax,CFL,dx,V,lambda_max,a,dt);
+    Time_Step(imax,CFL,dx,V,lambda_max,a,dt);
 
     
     //---------------- Verify lambda_max ---------------------//
@@ -172,8 +171,8 @@ void Test_Variable_Swap_1(void) // Test for conserved and primative variable vec
     conserved_to_primative(U[0][0],V[0][0]);
 
     double V1_error= abs(1.7750000000000-V[0][0][0]);
-    double V2_error= abs(2.7750000000000-V[0][0][1]);
-    double V3_error= abs(3.7750000000000-V[0][0][2]);
+    double V2_error= abs(5.0000000000000-V[0][0][1]);
+    double V3_error= abs(500.0000000000000-V[0][0][2]);
 
     TEST_ASSERT(V1_error<error_tol);
     TEST_ASSERT(V2_error<error_tol);
@@ -214,8 +213,8 @@ void Test_Variable_Swap_2(void) // Test for conserved and primative variable vec
     conserved_to_primative(U[0],V[0]);
 
     double V1_error= abs(1.7750000000000-V[0][0]);
-    double V2_error= abs(2.7750000000000-V[0][1]);
-    double V3_error= abs(3.7750000000000-V[0][2]);
+    double V2_error= abs(5.0000000000000-V[0][1]);
+    double V3_error= abs(500.0000000000000-V[0][2]);
 
     TEST_ASSERT(V1_error<error_tol);
     TEST_ASSERT(V2_error<error_tol);
@@ -256,8 +255,8 @@ void Test_Variable_Swap_3(void) // Test for conserved and primative variable vec
     conserved_to_primative(U,V);
 
     double V1_error= abs(1.7750000000000-V[0]);
-    double V2_error= abs(2.7750000000000-V[1]);
-    double V3_error= abs(3.7750000000000-V[2]);
+    double V2_error= abs(5.0000000000000-V[1]);
+    double V3_error= abs(500.0000000000000-V[2]);
 
     TEST_ASSERT(V1_error<error_tol);
     TEST_ASSERT(V2_error<error_tol);

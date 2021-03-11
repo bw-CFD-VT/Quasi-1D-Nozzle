@@ -3,17 +3,16 @@
 // Brendan Walsh (PID: bwalsh4)
 
 #include "WriteFile.hpp"
+#include "Constants.hpp"
 
 using namespace std;
 
-
-void norm_file(string filename, int counter, int imax, vector<double>v)
+void residual_norm_file(string filename, int counter, int imax, vector<double>v)
 {   
     ofstream file(filename,std::ios_base::app);
     if (file.is_open())
     {
         file<<counter<<",";
-        //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<3; i++)
         {   
             file << fixed << setprecision(14) << v[i]<<",";
@@ -24,13 +23,26 @@ void norm_file(string filename, int counter, int imax, vector<double>v)
     }
 }
 
+void error_norm_file(string filename, int imax, vector<double>v)
+{   
+    ofstream file(filename,std::ios_base::app);
+    if (file.is_open())
+    {
+        for (int i = 0; i<3; i++)
+        {   
+            file << fixed << setprecision(14) << v[i]<<",";
+        }
+            file << "\n";
+            file.close();
+    }
+}
+
 void mach_file(string filename, int counter, int imax, vector<double> v)
 {   
     ofstream file(filename,std::ios_base::app);
     if (file.is_open())
     {
         file<<counter<<",";
-        //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<imax; i++)
         {   
             file << fixed << setprecision(14) << v[i]<<",";
@@ -41,48 +53,27 @@ void mach_file(string filename, int counter, int imax, vector<double> v)
     }
 }
 
-void rho_file(string filename, int counter, int imax, vector<vector<vector<double> > >v)
+void prim_variable_file(string filename, int variable, int counter, int imax, vector<vector<vector<double> > >v)
 {   
-    ofstream file(filename,std::ios_base::app);
-    if (file.is_open())
+    if (variable == 3)
     {
-        file<<counter<<",";
-        //Write Variable Outputs to Corresponding Column/Variable Label
+        vector<vector<vector<double> > > T(1,vector<vector<double> >(imax,vector<double>(1,0)));
         for (int i = 0; i<imax; i++)
-        {   
-            file << fixed << setprecision(14) << v[0][i][0]<<", ";
+        {
+            T[0][i][0] = v[0][i][2]/v[0][i][0]/R;
         }
-            file << "\n";
-            file.close();
-    
+
+        variable = 0;
+        v[0] = T[0];
     }
-}
-void u_file(string filename, int counter, int imax, vector<vector<vector<double> > >v)
-{   
+
     ofstream file(filename,std::ios_base::app);
     if (file.is_open())
     {
         file<<counter<<",";
-        //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<imax; i++)
         {   
-            file << fixed << setprecision(14) << v[0][i][1]<<", ";
-        }
-            file << "\n";
-            file.close();
-    
-    }
-}
-void press_file(string filename, int counter, int imax, vector<vector<vector<double> > >v)
-{   
-    ofstream file(filename,std::ios_base::app);
-    if (file.is_open())
-    {
-        file<<counter<<",";
-        //Write Variable Outputs to Corresponding Column/Variable Label
-        for (int i = 0; i<imax; i++)
-        {   
-            file << fixed << setprecision(14) << v[0][i][2]<<", ";
+            file << fixed << setprecision(14) << v[0][i][variable]<<", ";
         }
             file << "\n";
             file.close();
@@ -108,12 +99,12 @@ void exact_file(string filename, const vector<vector<double> > v)
     }
 }
 
-
 void clear_existing_file()
 {
 
-    if( remove( "norm.txt" ) != 0 || remove( "mach.txt" ) != 0 || remove( "rho.txt" ) != 0 
-        || remove( "u.txt" ) != 0 || remove( "press.txt" ) != 0)
+    if( remove( "residual_norm.txt" ) != 0 || remove( "mach.txt" ) != 0 || remove( "rho.txt" ) != 0 
+        || remove( "u.txt" ) != 0 || remove( "press.txt" ) != 0 || remove( "error_norm_U.txt") != 0
+        || remove( "error_norm_V.txt") != 0)
 
     perror( "Error deleting file" );
 

@@ -11,8 +11,8 @@
 
 using namespace std;
 
-//---------------------------------------- Time Step, dt @ iteration = counter ------------------------------------------//
-void Time_Step (int counter, int imax, double CFL, double dx, vector<vector<vector<double> > > V_cell_center,
+//---------------------------------------- Time Step, dt ----------------------------------------------------------------//
+void Time_Step (int imax, double CFL, double dx, vector<vector<vector<double> > > V_cell_center,
                 vector<double> &lambda_max, vector<double> &a,vector<double> &dt);
 //-----------------------------------------------------------------------------------------------------------------------//
 
