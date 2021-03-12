@@ -2,8 +2,10 @@
 // Homework 2: Quasi-1D Nozzle FVM Code
 // Brendan Walsh (PID: bwalsh4)
 
+// Solver Notes
+//-------------------------------------//
 // Central Flux Quadrature
-// JST Artificial Dissipation
+// JST Artificial Dissipation based on implementation discussed in 
 // 1 Ghost Cell at Inflow and Outflow
 
 #include "Constants.hpp"
@@ -30,7 +32,7 @@ int main()
 
     int Case_Flag=1;
 
-    int imax = 18;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
+    int imax = 20;            //# of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
     
 
 
@@ -55,8 +57,8 @@ int main()
     double ghost_cell = 1; // Initialize # of ghost cells to be used (refers to # per boundary, i.e. 1 = 1 @ inflow and 1 @ outflow)
     vector<vector<vector<double> > > V_cell_center(2,vector<vector<double> >(imax,vector<double>(3,0)));     // Matrix of Primative Variable Vectors at cell center, V = [V1,V2,V3]
     vector<vector<vector<double> > > U_cell_center(2,vector<vector<double> >(imax,vector<double>(3,0)));  // Matrix of Conserved Variable Vectors, U = [U1,U2,U3], [row = time][column = i]
-    vector<double> M_cell_center(imax,0);              // Matrix of Mach number at cell center, M = [M^n,Mn+1,M]
-    vector<vector<double> > V_Boundary(2,vector<double>(3,0));        // Matrix of Primative Variable Vectors at interface, V = [V1,V2,V3]
+    vector<double> M_cell_center(imax,0);              // Vector of Mach number at cell center 
+    vector<vector<double> > V_Boundary(2,vector<double>(3,0));        // Vector Primative Variable Vectors at interface, V = [V1,V2,V3]
     vector<double> M_Boundary(2*ghost_cell,0);                 // Matrix of Mach number at interface, M = [M^n,Mn+1,M]
     vector<double> V_ghost_inflow(3,0);    // Matrix of Primative Variable Vectors @ inflow ghost cell(s), V = [V1,V2,V3]
     vector<double> V_ghost_outflow(3,0);   // Matrix of Primative Variable Vectors @ outfow ghost cell(s), V = [V1,V2,V3]
@@ -83,8 +85,8 @@ int main()
     vector<vector<double> > SourceTerm(imax,vector<double>(3,0));   // Vectorof Source Term, S = [S1,S2,S3] [
     // double K_2 = 1.5*0.25;                                               // Aritifical Dissipation constant (2nd order damping term)
     // double K_4 = 0.015625;                                          // Aritifical Dissipation constant (4th order damping term)
-    double K_2 = 0.00;                                               // Aritifical Dissipation constant (2nd order damping term)
-    double K_4 = 2*0.015625; 
+    double K_2 = 0.01;                                               // Aritifical Dissipation constant (2nd order damping term)
+    double K_4 = 1.5*0.015625; 
 
     //------------- Iterative Convergence Variable(s) ---------//
     int counter = 0;
@@ -92,11 +94,11 @@ int main()
     vector<double> L2_n (3,0);
     double convergence_criteria = 1e-10;
     // double CFL = .01;//SHOCK
-    double CFL = .1;
+    double CFL = .125;
+
+    //----------------------------------------- MAIN LOOP -------------------------------------------------------------//  
     do
     {  
-
-    //---------------------- MAIN ITERATION ---------------------------------------//  
     if(counter%1000 == 0) cout<<"Iteration: "<<counter<<endl;
     Time_Step(imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
     Flux(imax,V_Boundary,U_cell_center,F);
@@ -104,7 +106,8 @@ int main()
     Source_Term(imax,dx, Area_interface,V_cell_center,SourceTerm);
     
     double d_t = *std::min_element(dt.begin(),dt.end()); //If global time step -> replace dt below
-    
+
+    //------------------- Explicit Euler Find U at step n +1 ---------------------------//
     for (int i = 0; i<imax; i++)
     {
         for (int j = 0; j<3; j++)
@@ -117,7 +120,7 @@ int main()
                                             -(d_t/(Area_cell_center[i]*dx))*Residual[i][j];
         }
     }
-    //----------------------------------------------------------------------------//    
+    //----------------------------------------------------------------------------------//    
     
 
    //---------------------- Calculate L2 Residual Norm --------------------------------//

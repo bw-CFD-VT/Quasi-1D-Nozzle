@@ -2,6 +2,8 @@
 # Homework 2: Quasi-1D Nozzle FVM Code
 # Brendan Walsh (PID: bwalsh4)
 
+# Makefile used to compile and link required files
+
 CC = g++
 CFLAGS = -std=c++11 -Wall
 

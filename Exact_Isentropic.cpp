@@ -43,7 +43,7 @@ void Mach(double M_initial, double A_bar, double es, double &M)
 
 
         ea = abs((M_kp1-M_k)/M_kp1); //compute current iterations error
-        // ea = F_k;
+        // ea = F_k;                 //Wasn't working correctly -> no matter convergence tolerance M_exit ~ 3.22 not 3.16
         counter++;                         //loop counter
 
             if (counter>10e4)  //Failsafe incase there was a reason it would get stuck iterating
@@ -78,7 +78,7 @@ void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozz
              M_exact[i] = M_final;
          }
 
-         else               //Diverging Section -> Assuming Pb << Pe -> Supersonic
+         else            //Diverging Section -> Assuming Pb << Pe -> Supersonic
          {
              M_initial = 3;
              A_bar = Nozzle_Area[i]/A_star;
