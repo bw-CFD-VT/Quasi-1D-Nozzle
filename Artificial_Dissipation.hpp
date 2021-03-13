@@ -17,7 +17,7 @@ void Artifical_Dissipation (double K_2, double K_4,int imax, int ghost_cell, vec
                             vector<vector<vector<double> > > V_cell_center, vector<vector<vector<double> > > U_cell_center,
                             vector<double> V_ghost_inflow, vector<double> U_ghost_inflow,
                             vector<double> V_ghost_outflow, vector<double> U_ghost_outflow,
-                            vector<vector<double> >&d);
+                            vector<vector<double> > &d);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 //------------------------- Pressure Sensor -> Determine max(v(i-1),v(i),v(i+1),v(i+2)) ---------------------------------//

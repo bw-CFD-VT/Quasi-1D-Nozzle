@@ -31,7 +31,6 @@ void conserved_to_primative (vector<double> U, vector<double> &V)
 
     //------------ Limit Primative Variables ----------//
     vector<double> Primative_Limits(3,0);
-    // Primative_Limits[0] = 0.001; Primative_Limits[1] = 25; Primative_Limits[2] = 50000; //Nozzle Shock
     Primative_Limits[0] = 0.0001; Primative_Limits[1] = 10.0; Primative_Limits[2] = 500; //Nozzle Shock
     for (int j = 0; j<3; j++) V[j] = max(V[j],Primative_Limits[j]);
     //-------------------------------------------------//

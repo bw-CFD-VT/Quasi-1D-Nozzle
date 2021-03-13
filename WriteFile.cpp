@@ -5,11 +5,12 @@
 #include "WriteFile.hpp"
 #include "Constants.hpp"
 
+
 using namespace std;
 
-void residual_norm_file(string filename, int counter, int imax, vector<double>v)
+void residual_norm_file(string filename, int counter, int imax, vector<double>v, string grid_ID)
 {   
-    ofstream file(filename,std::ios_base::app);
+    ofstream file(filename+grid_ID,std::ios_base::app);
     if (file.is_open())
     {
         file<<counter<<",";
@@ -23,9 +24,9 @@ void residual_norm_file(string filename, int counter, int imax, vector<double>v)
     }
 }
 
-void error_norm_file(string filename, int imax, vector<double>v)
+void error_norm_file(string filename, int imax, vector<double>v, string grid_ID)
 {   
-    ofstream file(filename,std::ios_base::app);
+    ofstream file(filename+grid_ID,std::ios_base::app);
     if (file.is_open())
     {
         for (int i = 0; i<3; i++)
@@ -37,9 +38,9 @@ void error_norm_file(string filename, int imax, vector<double>v)
     }
 }
 
-void mach_file(string filename, int counter, int imax, vector<double> v)
+void mach_file(string filename, int counter, int imax, vector<double> v, string grid_ID)
 {   
-    ofstream file(filename,std::ios_base::app);
+    ofstream file(filename+grid_ID,std::ios_base::app);
     if (file.is_open())
     {
         file<<counter<<",";
@@ -53,7 +54,7 @@ void mach_file(string filename, int counter, int imax, vector<double> v)
     }
 }
 
-void prim_variable_file(string filename, int variable, int counter, int imax, vector<vector<vector<double> > >v)
+void prim_variable_file(string filename, int variable, int counter, int imax, vector<vector<vector<double> > >v, string grid_ID)
 {   
     if (variable == 3)
     {
@@ -67,7 +68,7 @@ void prim_variable_file(string filename, int variable, int counter, int imax, ve
         v[0] = T[0];
     }
 
-    ofstream file(filename,std::ios_base::app);
+    ofstream file(filename+grid_ID,std::ios_base::app);
     if (file.is_open())
     {
         file<<counter<<",";
@@ -81,12 +82,11 @@ void prim_variable_file(string filename, int variable, int counter, int imax, ve
     }
 }
 
-void exact_file(string filename, const vector<vector<double> > v)
+void exact_file(string filename, const vector<vector<double> > v, string grid_ID)
 {   
-    ofstream file(filename);
+    ofstream file(filename+grid_ID);
     if (file.is_open())
     {
-        //Write Variable Outputs to Corresponding Column/Variable Label
         for (int i = 0; i<v[0].size(); i++)
         {   
             for (int j = 0; j<v.size(); j++)
@@ -99,16 +99,27 @@ void exact_file(string filename, const vector<vector<double> > v)
     }
 }
 
-void clear_existing_file()
+void clear_existing_file(string grid_ID)
 {
+  string Exact_File = exactfile + grid_ID;
+  string Residual_File = residualnormfile + grid_ID;
+  string DE_U_File = errornormfile_U + grid_ID;
+  string DE_V_File = errornormfile_V + grid_ID;
+  string Mach_file = machfile + grid_ID;
+  string rho_file = rhofile + grid_ID;
+  string u_file = ufile + grid_ID;
+  string press_file = pressfile + grid_ID;
+  string temp_file = tempfile + grid_ID;
 
-    if( remove( "residual_norm.txt" ) != 0 || remove( "mach.txt" ) != 0 || remove( "rho.txt" ) != 0 
-        || remove( "u.txt" ) != 0 || remove( "press.txt" ) != 0 || remove( "error_norm_U.txt") != 0
-        || remove( "error_norm_V.txt") != 0)
+    if( remove( Exact_File.c_str() )    != 0) perror( "Error deleting file: 1" );
+    if( remove( Residual_File.c_str() ) != 0) perror( "Error deleting file: 2" );
+    if( remove( DE_U_File.c_str() )     != 0) perror( "Error deleting file: 3" );
+    if( remove( DE_V_File.c_str() )     != 0) perror( "Error deleting file: 4" );
+    if( remove( Mach_file.c_str() )     != 0) perror( "Error deleting file: 5" );
+    if( remove( rho_file.c_str() )      != 0) perror( "Error deleting file: 6" );
+    if( remove( u_file.c_str() )        != 0) perror( "Error deleting file: 7" );
+    if( remove( temp_file.c_str() )     !=0)  perror( "Error deleting file: 8" );
 
-    perror( "Error deleting file" );
 
-  else
-
-    puts( "File successfully deleted" );
+    
 }

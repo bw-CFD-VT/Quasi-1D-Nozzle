@@ -17,7 +17,6 @@ Strictly requires header function -> #include "acutest.hpp"
     -Variable Swap -> Primative to Conserved | Conserved to Primative
     -Norms
     -Flux
-    
 
 */
 
@@ -39,7 +38,8 @@ void Test_Geometry(void)
     
     double dx;
 
-    vector<double> x_interface, x_cell_center,Area_interface,Area_cell_center;
+    vector<double> x_interface(imax+1,0), x_cell_center(imax,0);
+    vector<double> Area_interface(imax+1,0),Area_cell_center(imax,0);
 
     Geometry_Indexing(imax,dx,x_interface,x_cell_center);
     Area(x_interface,Area_interface);
@@ -142,7 +142,6 @@ void Test_Time_Step(void)
 void Test_Variable_Swap_1(void) // Test for conserved and primative variable vectors for cell center values (vector<vector<vector<>>>)
 {
     int imax = 1;
-    int counter = 0;
     vector<vector<vector<double> > > U(1,vector<vector<double> >(imax,vector<double>(3,0)));
     vector<vector<vector<double> > > V(1,vector<vector<double> >(imax,vector<double>(3,0)));
 
@@ -171,7 +170,7 @@ void Test_Variable_Swap_1(void) // Test for conserved and primative variable vec
     conserved_to_primative(U[0][0],V[0][0]);
 
     double V1_error= abs(1.7750000000000-V[0][0][0]);
-    double V2_error= abs(5.0000000000000-V[0][0][1]);
+    double V2_error= abs(10.0000000000000-V[0][0][1]);
     double V3_error= abs(500.0000000000000-V[0][0][2]);
 
     TEST_ASSERT(V1_error<error_tol);
@@ -184,7 +183,6 @@ void Test_Variable_Swap_1(void) // Test for conserved and primative variable vec
 void Test_Variable_Swap_2(void) // Test for conserved and primative variable vectors for boundary face values (<vector<vector<>>)
 {
     int imax = 1;
-    int counter = 0;
     vector<vector<double> > U(imax,vector<double>(3,0));
     vector<vector<double> > V(imax,vector<double>(3,0));;
 
@@ -213,7 +211,7 @@ void Test_Variable_Swap_2(void) // Test for conserved and primative variable vec
     conserved_to_primative(U[0],V[0]);
 
     double V1_error= abs(1.7750000000000-V[0][0]);
-    double V2_error= abs(5.0000000000000-V[0][1]);
+    double V2_error= abs(10.0000000000000-V[0][1]);
     double V3_error= abs(500.0000000000000-V[0][2]);
 
     TEST_ASSERT(V1_error<error_tol);
@@ -226,7 +224,6 @@ void Test_Variable_Swap_2(void) // Test for conserved and primative variable vec
 void Test_Variable_Swap_3(void) // Test for conserved and primative variable vectors for ghost cell values (<vector<>)
 {
     int imax = 1;
-    int counter = 0;
     vector<double> U(3,0);
     vector<double> V(3,0);
 
@@ -255,7 +252,7 @@ void Test_Variable_Swap_3(void) // Test for conserved and primative variable vec
     conserved_to_primative(U,V);
 
     double V1_error= abs(1.7750000000000-V[0]);
-    double V2_error= abs(5.0000000000000-V[1]);
+    double V2_error= abs(10.0000000000000-V[1]);
     double V3_error= abs(500.0000000000000-V[2]);
 
     TEST_ASSERT(V1_error<error_tol);

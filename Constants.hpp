@@ -4,7 +4,6 @@
 
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
-
 #include <string>
 
 using namespace std;
@@ -20,15 +19,15 @@ const double p_back = 120e3; // Pa
 //---------------------------------------------------//
 
 //--------------- File Output Names -----------------//
-const string exactfile = "Exact_Solution_Isentropic.txt";
-const string residualnormfile = "residual_norm.txt";
-const string errornormfile_U = "error_norm_U.txt";
-const string errornormfile_V = "error_norm_V.txt";
-const string machfile = "mach.txt";
-const string rhofile = "rho.txt";
-const string ufile = "u.txt";
-const string pressfile = "press.txt";
-const string tempfile = "temp.txt";
+const string exactfile = "Exact_Solution_Isentropic";
+const string residualnormfile = "residual_norm";
+const string errornormfile_U = "error_norm_U";
+const string errornormfile_V = "error_norm_V";
+const string machfile = "mach";
+const string rhofile = "rho";
+const string ufile = "u";
+const string pressfile = "press";
+const string tempfile = "temp";
 //---------------------------------------------------//
 
 #endif

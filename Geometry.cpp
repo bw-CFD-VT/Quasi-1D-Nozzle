@@ -12,9 +12,6 @@ void Geometry_Indexing(double imax, double& dx, vector<double>& x_interface, vec
     double Nozzle_Length = 2.0;
     double imin = -1.0;           //Start of converging section
 
-    x_interface.resize(imax+1,0);
-    x_cell_center.resize(imax,0); 
-    
     dx = Nozzle_Length/imax; //Step size determined from number of cells selected
     double half_dx = dx/2.0;   
 
@@ -33,10 +30,9 @@ void Geometry_Indexing(double imax, double& dx, vector<double>& x_interface, vec
 }
 //-----------------------------------------------------------------------------------------------------------------------//
 
-//------------------------------------------ Nozzle Area at Cell Interface(s) -------------------------------------------// 
+//------------------------------- Nozzle Area at Cell Ceneter +Interface(s) ---------------------------------------------// 
  void Area(vector<double> x, vector<double>& Area_x)
  {
-     Area_x.resize(x.size(),0);
 
      for (int i = 0; i<x.size(); i++)
      {

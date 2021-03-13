@@ -22,11 +22,10 @@ void Initial_Conditions (int imax, vector<double> x_cell_center, vector<vector<v
     
      for (int i = 0;i<imax;i++)
      {  
-        M_cell_center[i] = 0.9*x_cell_center[i] + 1;      // Linearly varying Mach #
-        Isentropic_Flow(M_cell_center[i],rho, u, p, T);   // Isentropic Flow Assumed in Chamber/Plenum
+        M_cell_center[i] = 0.9*x_cell_center[i] + 1;         // Linearly varying Mach #
+        Isentropic_Flow(M_cell_center[i],rho, u, p, T);      // Isentropic Flow Assumed in Chamber/Plenum up to Nozzle Inlet
         V_cell_center[0][i] = {rho, u, p};                   // Primative variable vector at cell center at time t = 0
      }
-
 
     return;
 }

@@ -4,8 +4,7 @@
 
 #include "Artificial_Dissipation.hpp"
 #include "VariableSwap.hpp"
-#include "Constants.hpp"
-#include <iomanip>    
+#include "Constants.hpp"  
 
 using namespace std;
 
@@ -13,7 +12,7 @@ void Artifical_Dissipation (double K_2, double K_4,int imax, int ghost_cell, vec
                             vector<vector<vector<double> > > V_cell_center, vector<vector<vector<double> > > U_cell_center,
                             vector<double> V_ghost_inflow, vector<double> U_ghost_inflow,
                             vector<double> V_ghost_outflow, vector<double> U_ghost_outflow,
-                            vector<vector<double> >&d)
+                            vector<vector<double> > &d)
 {
 
 
@@ -49,12 +48,12 @@ void Artifical_Dissipation (double K_2, double K_4,int imax, int ghost_cell, vec
             U_dissipation[i+ghost_cell][j] = U_cell_center[0][i][j];
         }
     }
+
     //------------------------------------------------------------------------------------------------------//
 
     //-------------------------------- Artificial Dissipation Term -----------------------------------------//
-    double lambda_half;
+    double lambda_half = 0;
     vector<double> v(imax+2*ghost_cell,0); // Pressure sensor vector
-
     double eps_half_2 = 0;
     double eps_half_4 = 0;
 
@@ -69,7 +68,7 @@ void Artifical_Dissipation (double K_2, double K_4,int imax, int ghost_cell, vec
         lambda_half = 0.5*(lambda_max[i]+lambda_max[i-1]);
         eps_half_2 = K_2*max_v(v[i-1],v[i],v[i+1],v[i+2]); 
         eps_half_4 = max(0.0,(K_4-eps_half_2));
-      
+        
         for (int j = 0; j<3; j++)
         {
             double D_1 = 0, D_3 = 0;

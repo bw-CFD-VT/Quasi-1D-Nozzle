@@ -13,11 +13,11 @@
 
 using namespace std;
 
-void residual_norm_file(string filename, int counter, int imax, vector<double>v);
-void error_norm_file(string filename, int imax, vector<double> v);
-void mach_file(string filename, int counter, int imax, vector<double> v);
-void prim_variable_file(string filename, int variable, int counter, int imax, vector<vector<vector<double> > >v);
-void exact_file(string filename, vector<vector<double> > v);
-void clear_existing_file();
+void residual_norm_file(string filename, int counter, int imax, vector<double>v, string grid_ID);
+void error_norm_file(string filename, int imax, vector<double> v, string grid_ID);
+void mach_file(string filename, int counter, int imax, vector<double> v, string grid_ID);
+void prim_variable_file(string filename, int variable, int counter, int imax, vector<vector<vector<double> > >v, string grid_ID);
+void exact_file(string filename, vector<vector<double> > v, string grid_ID);
+void clear_existing_file(string grid_ID);
 
 #endif

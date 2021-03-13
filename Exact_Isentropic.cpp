@@ -7,7 +7,6 @@
 #include "WriteFile.hpp"
 #include "VariableSwap.hpp"
 #include "Isentropic_Flow.hpp"
-#include <iomanip>
 
 using namespace std;
 
@@ -48,8 +47,8 @@ void Mach(double M_initial, double A_bar, double es, double &M)
 
             if (counter>10e4)  //Failsafe incase there was a reason it would get stuck iterating
             {
-            cout<<"Stuck in Loop, Quitting";
-            break;
+                cout<<"Stuck in Loop, Quitting";
+                break;
             }
 
     }while(ea>es); 
@@ -63,7 +62,7 @@ void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozz
                               vector<double> &M_exact, vector<double> &rho_exact, vector<double> &u_exact,
                               vector<double> &p_exact, vector<double> &T_exact)
  {
-     double es = 1e-15; 
+     double es = 1e-14; 
      double M_initial=0,A_bar=0,M_final=0; //Initialize variables required for Newton's method 
      
      double A_star = 0.2; //HARD CODED IN THROAT AREA BASED ON A(0.0)
@@ -97,7 +96,7 @@ void Isentropic_Nozzle_Exact (double imax, vector<double> x, vector<double> Nozz
 
 void Exact_Solution(int imax, vector<double> x_cell_center, vector<double> Area_cell_center,
                     vector<double> M_exact, vector<double> rho_exact, vector<double> u_vel_exact,
-                    vector<double> p_exact, vector<double> T_exact, vector<vector<double> > V_exact, vector<vector<double> >&U_exact)
+                    vector<double> p_exact, vector<double> T_exact, string grid_ID, vector<vector<double> > &V_exact, vector<vector<double> >&U_exact)
 {
     
     Isentropic_Nozzle_Exact(imax,x_cell_center,Area_cell_center,M_exact,rho_exact,u_vel_exact,p_exact,T_exact);
@@ -121,7 +120,7 @@ void Exact_Solution(int imax, vector<double> x_cell_center, vector<double> Area_
 
    for(int i = 0; i<imax; i++) primative_to_conserved(V_exact[i],U_exact[i]);
 
-   exact_file(exactfile,exact_soln);
+   exact_file(exactfile,exact_soln,grid_ID);
     
    return;
 }

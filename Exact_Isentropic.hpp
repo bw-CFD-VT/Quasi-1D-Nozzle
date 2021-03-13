@@ -14,7 +14,7 @@ using namespace std;
 //--------------------------------------- Calculate Exact Solution (Isentropic) -----------------------------------------//
 void Exact_Solution(int imax, vector<double> x_cell_center, vector<double> Area_cell_center,
                     vector<double> M_exact, vector<double> rho_exact, vector<double> u_vel_exact,
-                    vector<double> p_exact, vector<double> T_exact, vector<vector<double> > V_exact, vector<vector<double> >&U_exact);
+                    vector<double> p_exact, vector<double> T_exact, string grid_ID, vector<vector<double> > &V_exact, vector<vector<double> >&U_exact);
 //-----------------------------------------------------------------------------------------------------------------------//
 
 

@@ -9,7 +9,6 @@ using namespace std;
 void Source_Term (double imax,double dx, vector<double> Area_interface,
                   vector<vector<vector<double> > > V_cell_center,vector<vector<double> > &SourceTerm)
 {
-
     double delta_A_dx=0;
 
     for (int i = 0; i<imax; i++)
