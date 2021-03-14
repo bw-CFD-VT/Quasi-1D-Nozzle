@@ -29,11 +29,11 @@ using namespace std;
 int main()
 {
 
-    int Case_Flag=2;         // (1): Supersonic (Isentropic), (2):Subsonic (Normal Shock)
+    int Case_Flag=1;         // (1): Supersonic (Isentropic), (2):Subsonic (Normal Shock)
 
     int imax = 80;           // # of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
 
-    string grid_ID = "_4_NS.txt";    // Grid ID -> "_x.txt"
+    string grid_ID = "_4_test.txt";    // Grid ID -> "_x.txt"
 
     clear_existing_file(grid_ID);   // Delete existing files with same name for writing results
 
@@ -86,7 +86,7 @@ int main()
     vector<double> lambda_max(imax,0);                              // Vector of local max eigenvalue |u| + a
     vector<vector<double> > Residual(imax,vector<double>(3,0));     // Steady-State residual vector
     vector<vector<double> > SourceTerm(imax,vector<double>(3,0));   // Vectorof Source Term, S = [S1,S2,S3] [
-    double K_2 = 0.275;                                             // Aritifical Dissipation constant (2nd order damping term)
+    double K_2 = 0.00;                                             // Aritifical Dissipation constant (2nd order damping term)
     double K_4 = 2*0.015625;                                        // Aritifical Dissipation constant (4th order damping term)
 
     //------------- Iterative Convergence Variable(s) ---------//
@@ -94,12 +94,11 @@ int main()
     vector<double> L2_norm_residual(3,0);
     vector<double> L2_n (3,0);
     double convergence_criteria = 1e-10;
-    double CFL = 0.1;
+    double CFL = 0.125;
     bool convergence = false;
     //----------------------------------------- MAIN LOOP -------------------------------------------------------------//  
     do
     {  
-        // if(counter>10000) CFL = 0.1;
         if(counter%1000 == 0) cout<<"Iteration: "<<counter<<endl;
         Time_Step(imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
         Flux(imax,V_Boundary,U_cell_center,F);

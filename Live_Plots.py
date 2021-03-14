@@ -9,8 +9,8 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.gridspec as gridspec
 import numpy as np
 
-Case_Flag = 2
-grid_ID = '_4_NS.txt'
+Case_Flag = 1
+grid_ID = '_4_test.txt'
 # color = 'b'   #Grid 1
 # color = 'g'   #Grid 2 
 # color = 'r'   #Grid 3

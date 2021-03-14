@@ -60,7 +60,8 @@ void Boundary_Conditions(int imax, int Case_Flag,int ghost_cell,vector<vector<ve
             if (i==2)
             {
                 V_Boundary[1][i] = p_back;
-                V_ghost_outflow[i]=(2*p_back)-V_cell_center[0][imax-1][i];
+                // V_ghost_outflow[i] = 2*V_Boundary[1][i]-V_cell_center[0][imax-1][i];
+                V_ghost_outflow[i]=2*V_cell_center[0][imax-1][i]-V_cell_center[0][imax-2][i];
             }
             else
             {
