@@ -14,7 +14,7 @@ void Flux (int imax, vector<vector<double> > V_Boundary,
     vector<vector<double> > U_interface(imax+1,vector<double>(3,0));
     vector<vector<double> > U_Boundary(2,vector<double>(3,0));
 
-    for(int i = 0; i<2; i++) primative_to_conserved(V_Boundary[i],U_Boundary[i]);
+    for(int i = 0; i<2; i++) primitive_to_conserved(V_Boundary[i],U_Boundary[i]);
     U_interface[0] = U_Boundary[0];
     U_interface[imax] = U_Boundary[1];
 

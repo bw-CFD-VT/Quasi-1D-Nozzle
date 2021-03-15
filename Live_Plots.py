@@ -10,11 +10,11 @@ import matplotlib.gridspec as gridspec
 import numpy as np
 
 Case_Flag = 1
-grid_ID = '_4_test.txt'
+grid_ID = 'Check.txt' #Update to match Grid ID text in main c++ file
 # color = 'b'   #Grid 1
 # color = 'g'   #Grid 2 
-# color = 'r'   #Grid 3
-color = 'm'   #Grid 4
+color = 'r'   #Grid 3
+# color = 'm'   #Grid 4
 # color = 'c'   #Grid 5
 # color = 'y'   #Grid 6
 
@@ -100,8 +100,10 @@ def update(i):
     ax4.set(xlabel = 'x (m)',ylabel = 'T (K)')
     if Case_Flag == 1:
         ax4.plot(x_cell_center,temp_exact,'k', label = 'Exact')
+        ax4.legend(loc = 'upper right')
     ax4.plot(x_cell_center,temp_CFD, color + '--', label = 'CFD')
-    ax4.legend(loc = 'upper right')
+    if Case_Flag == 2:
+        ax4.legend(loc = 'lower left')
     #---------------------------------------------------------------------#
 
     #-------------------- CFD Mach ---------------------------------------#

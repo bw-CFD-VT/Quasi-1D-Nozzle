@@ -118,7 +118,7 @@ void Exact_Solution(int imax, vector<double> x_cell_center, vector<double> Area_
         V_exact[i][2] = p_exact[i];
     } 
 
-   for(int i = 0; i<imax; i++) primative_to_conserved(V_exact[i],U_exact[i]);
+   for(int i = 0; i<imax; i++) primitive_to_conserved(V_exact[i],U_exact[i]);
 
    exact_file(exactfile,exact_soln,grid_ID);
     

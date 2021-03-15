@@ -155,7 +155,7 @@ void Test_Variable_Swap_1(void) // Test for conserved and primative variable vec
     }
 
     //---------------- Verify V -> U -------------------------//
-    primative_to_conserved(V[0][0],U[0][0]);
+    primitive_to_conserved(V[0][0],U[0][0]);
 
     double U1_error= abs(1.7750000000000-U[0][0][0]);
     double U2_error= abs(4.9256250000000-U[0][0][1]);
@@ -167,7 +167,7 @@ void Test_Variable_Swap_1(void) // Test for conserved and primative variable vec
     //--------------------------------------------------------//
 
     //---------------- Verify U -> V -------------------------//
-    conserved_to_primative(U[0][0],V[0][0]);
+    conserved_to_primitive(U[0][0],V[0][0]);
 
     double V1_error= abs(1.7750000000000-V[0][0][0]);
     double V2_error= abs(10.0000000000000-V[0][0][1]);
@@ -196,7 +196,7 @@ void Test_Variable_Swap_2(void) // Test for conserved and primative variable vec
     }
 
     //---------------- Verify V -> U -------------------------//
-    primative_to_conserved(V[0],U[0]);
+    primitive_to_conserved(V[0],U[0]);
 
     double U1_error= abs(1.7750000000000-U[0][0]);
     double U2_error= abs(4.9256250000000-U[0][1]);
@@ -208,7 +208,7 @@ void Test_Variable_Swap_2(void) // Test for conserved and primative variable vec
     //--------------------------------------------------------//
 
     //---------------- Verify U -> V -------------------------//
-    conserved_to_primative(U[0],V[0]);
+    conserved_to_primitive(U[0],V[0]);
 
     double V1_error= abs(1.7750000000000-V[0][0]);
     double V2_error= abs(10.0000000000000-V[0][1]);
@@ -237,7 +237,7 @@ void Test_Variable_Swap_3(void) // Test for conserved and primative variable vec
     }
 
     //---------------- Verify V -> U -------------------------//
-    primative_to_conserved(V,U);
+    primitive_to_conserved(V,U);
 
     double U1_error= abs(1.7750000000000-U[0]);
     double U2_error= abs(4.9256250000000-U[1]);
@@ -249,7 +249,7 @@ void Test_Variable_Swap_3(void) // Test for conserved and primative variable vec
     //--------------------------------------------------------//
 
     //---------------- Verify U -> V -------------------------//
-    conserved_to_primative(U,V);
+    conserved_to_primitive(U,V);
 
     double V1_error= abs(1.7750000000000-V[0]);
     double V2_error= abs(10.0000000000000-V[1]);

@@ -33,7 +33,7 @@ int main()
 
     int imax = 80;           // # of Cells --> ****EVEN # TO GET INTERFACE @ THROAT****
 
-    string grid_ID = "_4_test.txt";    // Grid ID -> "_x.txt"
+    string grid_ID = "grid#_here.txt";    // Grid ID -> "_x.txt"
 
     clear_existing_file(grid_ID);   // Delete existing files with same name for writing results
 
@@ -69,11 +69,11 @@ int main()
     vector<double> U_ghost_outflow(3,0);   // Matrix of Conserved Variable Vectors @ outfow ghost cell(s), U = [U1,U2,U3]
 
     Initial_Conditions(imax,x_cell_center,V_cell_center,M_cell_center);
-    for (int i = 0; i<imax; i++) primative_to_conserved(V_cell_center[0][i],U_cell_center[0][i]);
+    for (int i = 0; i<imax; i++) primitive_to_conserved(V_cell_center[0][i],U_cell_center[0][i]);
     
     Boundary_Conditions(imax,Case_Flag,ghost_cell,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
-    primative_to_conserved(V_ghost_inflow,U_ghost_inflow);
-    primative_to_conserved(V_ghost_outflow,U_ghost_outflow);
+    primitive_to_conserved(V_ghost_inflow,U_ghost_inflow);
+    primitive_to_conserved(V_ghost_outflow,U_ghost_outflow);
     //-------------------------------------------------------------------------------------------------------------------------//
 
 
@@ -86,8 +86,8 @@ int main()
     vector<double> lambda_max(imax,0);                              // Vector of local max eigenvalue |u| + a
     vector<vector<double> > Residual(imax,vector<double>(3,0));     // Steady-State residual vector
     vector<vector<double> > SourceTerm(imax,vector<double>(3,0));   // Vectorof Source Term, S = [S1,S2,S3] [
-    double K_2 = 0.00;                                             // Aritifical Dissipation constant (2nd order damping term)
-    double K_4 = 2*0.015625;                                        // Aritifical Dissipation constant (4th order damping term)
+    double K_2 = 0.25;                                             // Aritifical Dissipation constant (2nd order damping term)
+    double K_4 = 0.015625;                                        // Aritifical Dissipation constant (4th order damping term)
 
     //------------- Iterative Convergence Variable(s) ---------//
     int counter = 0;
@@ -152,8 +152,8 @@ int main()
         //----------- Update Conserved + Primative Variable to be at step n ---------------//
         counter++; 
         U_cell_center[0] = U_cell_center[1];
-        for (int i = 0; i<imax; i++) conserved_to_primative(U_cell_center[0][i],V_cell_center[0][i]);
-        for (int i = 0; i<imax; i++) primative_to_conserved(V_cell_center[0][i],U_cell_center[0][i]); //Due to limiting prim. variables
+        for (int i = 0; i<imax; i++) conserved_to_primitive(U_cell_center[0][i],V_cell_center[0][i]);
+        for (int i = 0; i<imax; i++) primitive_to_conserved(V_cell_center[0][i],U_cell_center[0][i]); //Due to limiting prim. variables
         //---------------------------------------------------------------------------------//
 
         //---------------------- Update Mach Number ---------------------------------------//
@@ -166,8 +166,8 @@ int main()
 
         //---------------------- Update Boundary Conditions -------------------------------//
         Boundary_Conditions(imax,Case_Flag,ghost_cell,V_cell_center,M_cell_center,V_Boundary,M_Boundary,V_ghost_inflow,V_ghost_outflow);
-        primative_to_conserved(V_ghost_inflow,U_ghost_inflow);
-        primative_to_conserved(V_ghost_outflow,U_ghost_outflow); 
+        primitive_to_conserved(V_ghost_inflow,U_ghost_inflow);
+        primitive_to_conserved(V_ghost_outflow,U_ghost_outflow); 
         //---------------------------------------------------------------------------------//
 
         //---------------------- Check Convergence ----------------------------------------//

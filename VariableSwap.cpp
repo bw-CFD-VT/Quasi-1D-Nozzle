@@ -10,7 +10,7 @@ using namespace std;
 
 
 //---------------------------------------- V -> U -----------------------------------------------------------------------//
-void primative_to_conserved (vector<double> V, vector<double> &U)
+void primitive_to_conserved (vector<double> V, vector<double> &U)
 {
     U[0] = V[0];
     U[1] = V[0]*V[1];
@@ -21,7 +21,7 @@ void primative_to_conserved (vector<double> V, vector<double> &U)
 //-----------------------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------- U -> V -----------------------------------------------------------------------//
-void conserved_to_primative (vector<double> U, vector<double> &V)
+void conserved_to_primitive (vector<double> U, vector<double> &V)
 {
     
     V[0] = U[0];
@@ -30,14 +30,15 @@ void conserved_to_primative (vector<double> U, vector<double> &V)
 
 
     //------------ Limit Primative Variables ----------//
-    vector<double> Primative_Limits(3,0);
-    Primative_Limits[0] = 0.0001; Primative_Limits[1] = 10.0; Primative_Limits[2] = 500; //Nozzle Shock
+    vector<double> Primitive_Limits(3,0);
     
-    for (int j = 0; j<3; j++) V[j] = max(V[j],Primative_Limits[j]);
+    Primitive_Limits[0] = 0.0001; Primitive_Limits[1] = 10.0; Primitive_Limits[2] = 500; //Nozzle Shock
+    
+    for (int j = 0; j<3; j++) V[j] = max(V[j],Primitive_Limits[j]);
 
-    Primative_Limits[0] = 100.0; Primative_Limits[1] = 2000; Primative_Limits[2] = 500e3; //Nozzle Shock
+    Primitive_Limits[0] = 5.5; Primitive_Limits[1] = 1000; Primitive_Limits[2] = 400e3; //Nozzle Shock
 
-    for (int j = 0; j<3; j++) V[j] = min(V[j],Primative_Limits[j]);
+    for (int j = 0; j<3; j++) V[j] = min(V[j],Primitive_Limits[j]);
     //-------------------------------------------------//
 
     return;

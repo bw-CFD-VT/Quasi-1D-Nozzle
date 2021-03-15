@@ -117,6 +117,7 @@ void clear_existing_file(string grid_ID)
     if( remove( DE_V_File.c_str() )     != 0) perror( "Error deleting file: 4" );
     if( remove( Mach_file.c_str() )     != 0) perror( "Error deleting file: 5" );
     if( remove( rho_file.c_str() )      != 0) perror( "Error deleting file: 6" );
+    if( remove( press_file.c_str() )      != 0) perror( "Error deleting file: 6" );
     if( remove( u_file.c_str() )        != 0) perror( "Error deleting file: 7" );
     if( remove( temp_file.c_str() )     !=0)  perror( "Error deleting file: 8" );
 
