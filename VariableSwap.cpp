@@ -36,7 +36,7 @@ void conserved_to_primitive (vector<double> U, vector<double> &V)
     
     for (int j = 0; j<3; j++) V[j] = max(V[j],Primitive_Limits[j]);
 
-    Primitive_Limits[0] = 5.5; Primitive_Limits[1] = 1000; Primitive_Limits[2] = 400e3; //Nozzle Shock
+    Primitive_Limits[0] = 5.5; Primitive_Limits[1] = 1000; Primitive_Limits[2] = 400e3; //Nozzle Shock (Upper Limit)
 
     for (int j = 0; j<3; j++) V[j] = min(V[j],Primitive_Limits[j]);
     //-------------------------------------------------//

@@ -13,7 +13,7 @@ using namespace std;
     Boundary Conditions determined for inflow and outflow using 1 ghost cell
     Inflow: 
             (1) Extrapolate Mach # from the interior and fix stagnation Temp. and Press.,
-                use isentropic flow relations to determine primative variables
+                use isentropic flow relations to determine primitive variables
     Outflow: 
             (1) Supersonic: Extrapolate all primitive variables from internal cell center
             (2) Subsonic: Fix back pressure and extrapolate velocity and density from internal cell center

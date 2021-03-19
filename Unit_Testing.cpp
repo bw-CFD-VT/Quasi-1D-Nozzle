@@ -139,7 +139,7 @@ void Test_Time_Step(void)
     
 }
 
-void Test_Variable_Swap_1(void) // Test for conserved and primative variable vectors for cell center values (vector<vector<vector<>>>)
+void Test_Variable_Swap_1(void) // Test for conserved and primitive variable vectors for cell center values (vector<vector<vector<>>>)
 {
     int imax = 1;
     vector<vector<vector<double> > > U(1,vector<vector<double> >(imax,vector<double>(3,0)));
@@ -180,7 +180,7 @@ void Test_Variable_Swap_1(void) // Test for conserved and primative variable vec
    
 }
 
-void Test_Variable_Swap_2(void) // Test for conserved and primative variable vectors for boundary face values (<vector<vector<>>)
+void Test_Variable_Swap_2(void) // Test for conserved and primitive variable vectors for boundary face values (<vector<vector<>>)
 {
     int imax = 1;
     vector<vector<double> > U(imax,vector<double>(3,0));
@@ -221,7 +221,7 @@ void Test_Variable_Swap_2(void) // Test for conserved and primative variable vec
    
 }
 
-void Test_Variable_Swap_3(void) // Test for conserved and primative variable vectors for ghost cell values (<vector<>)
+void Test_Variable_Swap_3(void) // Test for conserved and primitive variable vectors for ghost cell values (<vector<>)
 {
     int imax = 1;
     vector<double> U(3,0);

@@ -58,13 +58,13 @@ int main()
 
     //----------------------------------------------------Initial Conditions --------------------------------------------------//
     double ghost_cell = 1; // Initialize # of ghost cells to be used (refers to # per boundary, i.e. 1 = 1 @ inflow and 1 @ outflow)
-    vector<vector<vector<double> > > V_cell_center(2,vector<vector<double> >(imax,vector<double>(3,0)));     // Matrix of Primative Variable Vectors at cell center, V = [V1,V2,V3]
+    vector<vector<vector<double> > > V_cell_center(2,vector<vector<double> >(imax,vector<double>(3,0)));     // Matrix of Primitive Variable Vectors at cell center, V = [V1,V2,V3]
     vector<vector<vector<double> > > U_cell_center(2,vector<vector<double> >(imax,vector<double>(3,0)));  // Matrix of Conserved Variable Vectors, U = [U1,U2,U3], [row = time][column = i]
     vector<double> M_cell_center(imax,0);              // Vector of Mach number at cell center 
-    vector<vector<double> > V_Boundary(2,vector<double>(3,0));        // Vector Primative Variable Vectors at interface, V = [V1,V2,V3]
+    vector<vector<double> > V_Boundary(2,vector<double>(3,0));        // Vector Primitive Variable Vectors at interface, V = [V1,V2,V3]
     vector<double> M_Boundary(2*ghost_cell,0);                 // Matrix of Mach number at interface, M = [M^n,Mn+1,M]
-    vector<double> V_ghost_inflow(3,0);    // Matrix of Primative Variable Vectors @ inflow ghost cell(s), V = [V1,V2,V3]
-    vector<double> V_ghost_outflow(3,0);   // Matrix of Primative Variable Vectors @ outfow ghost cell(s), V = [V1,V2,V3]
+    vector<double> V_ghost_inflow(3,0);    // Matrix of Primitive Variable Vectors @ inflow ghost cell(s), V = [V1,V2,V3]
+    vector<double> V_ghost_outflow(3,0);   // Matrix of Primitive Variable Vectors @ outfow ghost cell(s), V = [V1,V2,V3]
     vector<double> U_ghost_inflow(3,0);    // Matrix of Conserved Variable Vectors @ outfow ghost cell(s), U = [U1,U2,U3]
     vector<double> U_ghost_outflow(3,0);   // Matrix of Conserved Variable Vectors @ outfow ghost cell(s), U = [U1,U2,U3]
 
@@ -149,7 +149,7 @@ int main()
         //---------------------------------------------------------------------------------//
 
 
-        //----------- Update Conserved + Primative Variable to be at step n ---------------//
+        //----------- Update Conserved + Primitive Variable to be at step n ---------------//
         counter++; 
         U_cell_center[0] = U_cell_center[1];
         for (int i = 0; i<imax; i++) conserved_to_primitive(U_cell_center[0][i],V_cell_center[0][i]);
