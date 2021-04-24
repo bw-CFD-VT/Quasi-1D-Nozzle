@@ -22,6 +22,8 @@
 #include "Source_Term.hpp"
 #include "L2_Norm.hpp"
 #include "WriteFile.hpp"
+#include "Characteristic_BCs.hpp"
+#include "Flux_Upwind.hpp"
 #include <stdio.h>
 
 using namespace std;
@@ -89,6 +91,8 @@ int main()
     double K_2 = 0.25;                                             // Aritifical Dissipation constant (2nd order damping term)
     double K_4 = 0.015625;                                        // Aritifical Dissipation constant (4th order damping term)
 
+    double eps = 0;                                                 //epsilon for explicit control over 1st or 2nd order upwind
+    double kappa = -1;                                              //control of
     //------------- Iterative Convergence Variable(s) ---------//
     int counter = 0;
     vector<double> L2_norm_residual(3,0);
@@ -101,6 +105,7 @@ int main()
     {  
         if(counter%1000 == 0) cout<<"Iteration: "<<counter<<endl;
         Time_Step(imax,CFL,dx,V_cell_center,lambda_max,a,dt); 
+        // Flux_States(imax,eps,kappa)
         Flux(imax,V_Boundary,U_cell_center,F);
         Artifical_Dissipation(K_2,K_4,imax,ghost_cell,lambda_max,V_cell_center,U_cell_center,V_ghost_inflow,U_ghost_inflow,V_ghost_outflow,U_ghost_outflow,d);
         Source_Term(imax,dx, Area_interface,V_cell_center,SourceTerm);

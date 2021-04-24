@@ -7,11 +7,11 @@
 CC = g++
 CFLAGS = -std=c++11 -Wall
 
-main: Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
-	$(CC) $(CFLAGS) -o Main Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
+main: Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o Characteristic_BCs.o Flux_Upwind.o
+	$(CC) $(CFLAGS) -o Main Main.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o Characteristic_BCs.o Flux_Upwind.o
 
-Unit_Testing: Unit_Testing.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
-	$(CC) $(CFLAGS) -o Unit_Testing Unit_Testing.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o
+Unit_Testing: Unit_Testing.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o Characteristic_BCs.o Flux_Upwind.o
+	$(CC) $(CFLAGS) -o Unit_Testing Unit_Testing.o Geometry.o Initial_Conditions.o Boundary_Conditions.o Isentropic_Flow.o Exact_Isentropic.o SoundSpeed.o TimeStep.o VariableSwap.o Flux.o Artificial_Dissipation.o Source_Term.o L2_Norm.o WriteFile.o Characteristic_BCs.o Flux_Upwind.o
 
 Geometry.o:	Geometry.hpp Geometry.cpp
 	$(CC) $(CFLAGS) -c Geometry.cpp
@@ -51,6 +51,12 @@ L2_Norm.o: L2_Norm.hpp L2_Norm.cpp
 
 WriteFile.o: WriteFile.hpp WriteFile.cpp
 	$(CC) $(CFLAGS) -c WriteFile.cpp
+	
+Characteristic_BCs.o: Characteristic_BCs.hpp Characteristic_BCs.cpp
+	$(CC) $(CFLAGS) -c Characteristic_BCs.cpp	
+
+Flux_Upwind.o: Flux_Upwind.hpp Flux_Upwind.cpp	
+	$(CC) $(CFLAGS) -c Flux_Upwind.cpp
 
 clean:
 	rm -f core *.o Main Unit_Testing 
